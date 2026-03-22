@@ -239,7 +239,7 @@ main {
 /* ── TICKER ── */
 .ticker-wrap {
   position: fixed;
-  bottom: 20%;
+  bottom: 15%;
   left: 0;
   right: 0;
   overflow: hidden;
@@ -250,12 +250,12 @@ main {
 .ticker-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: ticker 18s linear infinite;
+  animation: ticker 28s linear infinite;
 }
 
 .ticker-quote {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 15px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
   color: #e00000;
   font-style: italic;
 }
@@ -274,10 +274,6 @@ main {
 }
 
 @keyframes ticker {
-  0%   { transform: translateX(100vw); }
-  100% { transform: translateX(-100%); }
-}
-
-.popup-cta:hover {
-  opacity: 0.75;
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100vw); }
 }
