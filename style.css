@@ -119,15 +119,15 @@ body {
 /* magnetic cursor dot */
 .nav-cursor {
   position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-  box-shadow: 0 0 4px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.8) inset;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 0.1em;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, opacity 0.2s;
+  white-space: nowrap;
 }
 
 /* ── MAIN ── */
