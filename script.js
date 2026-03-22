@@ -100,4 +100,17 @@ window.onload = function () {
     lastScroll = current;
   });
 
+/* ── POPUP ── */
+  const popup = document.getElementById('popup');
+  const popupClose = document.getElementById('popup-close');
+
+  setTimeout(() => {
+    popup.classList.add('visible');
+  }, 2500);
+
+  popupClose.addEventListener('click', () => {
+    popup.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 1, 1)';
+    popup.style.left = '-380px';
+  });
+  
 };
