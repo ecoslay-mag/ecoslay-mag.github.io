@@ -119,8 +119,8 @@ body {
 /* magnetic cursor dot */
 .nav-cursor {
   position: fixed;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 13px;
   font-weight: bold;
   color: #222;
   letter-spacing: 0.1em;
