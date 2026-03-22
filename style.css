@@ -277,3 +277,29 @@ main {
   0%   { transform: translateX(100vw); }
   100% { transform: translateX(-100%); }
 }
+
+/* ── MOBILE NAV ── */
+@media (max-width: 600px) {
+  #navbar {
+    top: 12px;
+    width: calc(100% - 24px);
+    left: 12px;
+    right: 12px;
+    transform: none;
+  }
+
+  .nav-inner {
+    width: 100%;
+    justify-content: space-between;
+    padding: 6px 6px;
+    border-radius: 14px;
+  }
+
+  .nav-link {
+    padding: 8px 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    flex: 1;
+    text-align: center;
+  }
+}
