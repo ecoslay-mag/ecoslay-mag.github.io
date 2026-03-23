@@ -86,13 +86,22 @@ window.onload = function () {
     lastScroll = current;
   });
 
+  /* ── HERO SEQUENCE ── */
+  const stage = document.querySelector('.stage');
+  const ctaBtn = document.getElementById('cta-btn');
+  
+  setTimeout(() => {
+    stage.classList.add('shifted');
+    ctaBtn.classList.add('show');
+  }, 3000);
+
   /* ── POPUP ── */
   const popup = document.getElementById('popup');
   const popupClose = document.getElementById('popup-close');
 
   setTimeout(() => {
     popup.classList.add('visible');
-  }, 2500);
+  }, 5000);
 
   popupClose.addEventListener('click', () => {
     popup.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 1, 1)';
