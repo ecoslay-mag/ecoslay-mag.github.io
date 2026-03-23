@@ -243,8 +243,9 @@ main {
 #nav-menu {
   position: absolute;
   top: 64px;
+  right: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(0) translateY(-8px);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -272,7 +273,7 @@ main {
 #nav-menu.open {
   opacity: 1;
   pointer-events: all;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(0) translateY(0);
 }
 
 .nav-link {
@@ -306,5 +307,15 @@ main {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
+  }
+
+  #nav-menu {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(-8px);
+  }
+
+  #nav-menu.open {
+    transform: translateX(-50%) translateY(0);
   }
 }
