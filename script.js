@@ -109,7 +109,7 @@ window.onload = function () {
 
   setTimeout(() => {
     popup.classList.add('visible');
-  }, 5000);
+  }, 7000);
 
   popupClose.addEventListener('click', () => {
     popup.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 1, 1)';
