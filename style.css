@@ -449,7 +449,7 @@ main {
 
 @media (max-width: 600px) {
   body {
-    background-size: 500%;
-    background-position: center top;
+    background-size: 350%;
+    background-position: center;
   }
 }
