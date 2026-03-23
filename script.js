@@ -1,5 +1,23 @@
 window.onload = function () {
 
+  const navbar = document.getElementById('navbar');
+
+  /* ── HAMBURGER ── */
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('open');
+  });
+
+  document.addEventListener('click', e => {
+    if (!navbar.contains(e.target)) {
+      hamburger.classList.remove('open');
+      navMenu.classList.remove('open');
+    }
+  });
+
   /* ── MELT ANIMATION ── */
   const turb = document.querySelector("#turb");
   const disp = document.querySelector("#disp");
