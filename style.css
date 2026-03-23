@@ -189,8 +189,9 @@ main {
 #navbar {
   position: fixed;
   top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 20px;
+  left: auto;
+  transform: none;
   z-index: 100;
 }
 
@@ -298,4 +299,12 @@ main {
     #c8c8c8 60%,
     #ececec 100%
   );
+}
+
+@media (max-width: 768px) {
+  #navbar {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
 }
