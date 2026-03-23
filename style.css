@@ -19,7 +19,7 @@
 body {
   background-color: var(--pink);
   background-image: url('background.png');
-  background-size: 110%;
+  background-size: 120%;
   background-position: center;
   background-attachment: fixed;
   min-height: 100vh;
