@@ -90,10 +90,18 @@ window.onload = function () {
   const stage = document.querySelector('.stage');
   const ctaBtn = document.getElementById('cta-btn');
   
-  setTimeout(() => {
-    stage.classList.add('shifted');
-    ctaBtn.classList.add('show');
-  }, 3000);
+  const intro = gsap.timeline({ delay: 3 });
+  
+  intro
+    .to(".stage", {
+      y: -80, 
+      duration: 0.8
+    })
+    .to("#cta-btn", {
+      opacity: 1,
+      y: 0,
+      duration: 0.6
+    }, "<"); 
 
   /* ── POPUP ── */
   const popup = document.getElementById('popup');
