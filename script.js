@@ -48,16 +48,22 @@ window.onload = function () {
       attr: { baseFrequency: "0.02 0.06" }
     }, "<0.4");
 
-  /* ── CUSTOM CURSOR ── */
+/* ── CUSTOM CURSOR ── */
   const cursor = document.createElement('div');
   cursor.className = 'nav-cursor';
-  cursor.textContent = '💅';
+  cursor.textContent = '💅'; 
   document.body.appendChild(cursor);
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
+  // Set initial position to Top-Right (e.g., 90% width, 50px from top)
+  let mouseX = window.innerWidth * 0.9; 
+  let mouseY = 50;
+
   let curX = mouseX;
   let curY = mouseY;
+
+  // This ensures the emoji starts exactly at the coordinates above
+  cursor.style.left = curX + 'px';
+  cursor.style.top = curY + 'px';
 
   document.addEventListener('mousemove', e => {
     mouseX = e.clientX;
@@ -65,6 +71,7 @@ window.onload = function () {
   });
 
   function animateCursor() {
+    // The "0.15" creates the trailing/easing effect
     curX += (mouseX - curX) * 0.15;
     curY += (mouseY - curY) * 0.15;
     cursor.style.left = curX + 'px';
@@ -73,6 +80,8 @@ window.onload = function () {
   }
   animateCursor();
 
+
+  
   /* ── NAV HIDE ON SCROLL ── */
   let lastScroll = 0;
 
