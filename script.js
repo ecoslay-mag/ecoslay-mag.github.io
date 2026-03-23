@@ -55,36 +55,120 @@ window.onload = function () {
   }
   animateCursor();
 
+/* ── NAV ── */
+#navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
 
-  /* ── MAGNETIC NAV LINKS ── */
-  const links = document.querySelectorAll('.nav-link');
+#hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid #999;
+  cursor: pointer;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #e0e0e0 25%,
+    #b0b0b0 50%,
+    #d8d8d8 75%,
+    #f5f5f5 100%
+  );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 -1px 0 #888 inset,
+    0 4px 16px rgba(0,0,0,0.25);
+  position: relative;
+  z-index: 101;
+}
 
-  links.forEach(link => {
-    link.addEventListener('mousemove', e => {
-      const rect = link.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) * 0.35;
-      const dy = (e.clientY - cy) * 0.35;
+#hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #333;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-      gsap.to(link, {
-        x: dx,
-        y: dy,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    });
+#hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+#hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+#hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
-    link.addEventListener('mouseleave', () => {
-      gsap.to(link, {
-        x: 0,
-        y: 0,
-        duration: 0.5,
-        ease: "elastic.out(1, 0.4)"
-      });
-    });
-  });
+#nav-menu {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 18px;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #e0e0e0 25%,
+    #b0b0b0 50%,
+    #d8d8d8 75%,
+    #f5f5f5 100%
+  );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 -1px 0 #888 inset,
+    0 4px 16px rgba(0,0,0,0.25);
+  border: 1px solid #999;
+  min-width: 180px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
 
+#nav-menu.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-link {
+  position: relative;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13.5px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: #333;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  background: transparent;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.nav-link:hover {
+  background: linear-gradient(180deg,
+    #e8e8e8 0%,
+    #c0c0c0 40%,
+    #a0a0a0 50%,
+    #c8c8c8 60%,
+    #ececec 100%
+  );
+}
 
   /* ── NAV HIDE ON SCROLL ── */
   let lastScroll = 0;
