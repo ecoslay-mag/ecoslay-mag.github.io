@@ -17,11 +17,15 @@
 }
 
 body {
-  background: var(--pink);
+  background-color: var(--pink);
+  background-image: url('assets/background.png');
+  background-size: 110%;
+  background-position: center;
+  background-attachment: fixed;
   min-height: 100vh;
   font-family: 'Share Tech Mono', monospace;
   overflow-x: hidden;
-}
+  }
 
 /* magnetic cursor dot */
 .nav-cursor {
