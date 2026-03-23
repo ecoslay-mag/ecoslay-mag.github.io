@@ -51,7 +51,7 @@ window.onload = function () {
   /* ── CUSTOM CURSOR ── */
   const cursor = document.createElement('div');
   cursor.className = 'nav-cursor';
-  cursor.textContent = 'SLAYY';
+  cursor.textContent = '💅';
   document.body.appendChild(cursor);
 
   let mouseX = window.innerWidth / 2;
