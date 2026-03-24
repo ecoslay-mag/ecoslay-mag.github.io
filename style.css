@@ -18,7 +18,7 @@
 
 body {
   background-color: var(--pink);
-  background-image: url('background.png');
+  background-image: url('background.webp');
   background-size: 120%;
   background-position: center;
   background-attachment: fixed;
