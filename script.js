@@ -1,22 +1,13 @@
 window.onload = function () {
 
-  const navbar = document.getElementById('navbar');
-
-  /* ── HAMBURGER ── */
-  const hamburger = document.getElementById('hamburger');
-  const navMenu = document.getElementById('nav-menu');
-
-  hamburger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hamburger.classList.toggle('open');
-    navMenu.classList.toggle('open');
-  });
-
-  document.addEventListener('click', e => {
-    if (!navbar.contains(e.target)) {
-      hamburger.classList.remove('open');
-      navMenu.classList.remove('open');
-    }
+  /* ── SMOOTH SCROLL ── */
+  document.querySelectorAll('.topbar-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
   });
 
   /* ── MELT ANIMATION ── */
@@ -48,56 +39,12 @@ window.onload = function () {
       attr: { baseFrequency: "0.02 0.06" }
     }, "<0.4");
 
-/* ── CUSTOM CURSOR ── */
-  const cursor = document.createElement('div');
-  cursor.className = 'nav-cursor';
-  cursor.textContent = '💅'; 
-  document.body.appendChild(cursor);
 
-  // Set initial position to Top-Right (e.g., 90% width, 50px from top)
-  let mouseX = window.innerWidth * 0.9; 
-  let mouseY = 50;
-
-  let curX = mouseX;
-  let curY = mouseY;
-
-  // This ensures the emoji starts exactly at the coordinates above
-  cursor.style.left = curX + 'px';
-  cursor.style.top = curY + 'px';
-
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function animateCursor() {
-    // The "0.15" creates the trailing/easing effect
-    curX += (mouseX - curX) * 0.15;
-    curY += (mouseY - curY) * 0.15;
-    cursor.style.left = curX + 'px';
-    cursor.style.top = curY + 'px';
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
 
 
   
-  /* ── NAV HIDE ON SCROLL ── */
-  let lastScroll = 0;
-
-  window.addEventListener('scroll', () => {
-    const current = window.scrollY;
-    if (current > lastScroll && current > 60) {
-      navbar.style.top = '-80px';
-    } else {
-      navbar.style.top = '20px';
-    }
-    lastScroll = current;
-  });
-
   /* ── HERO SEQUENCE ── */
   const stage = document.querySelector('.stage');
-  const ctaBtn = document.getElementById('cta-btn');
   
   const intro = gsap.timeline({ delay: 3 });
   
@@ -106,23 +53,58 @@ window.onload = function () {
       y: -80, 
       duration: 0.8
     })
-    .to("#cta-btn", {
+    .to("#hero-subtitle", {
       opacity: 1,
       y: 0,
       duration: 0.6
-    }, "<"); 
+    }, "-=0.3");
 
-  /* ── POPUP ── */
-  const popup = document.getElementById('popup');
-  const popupClose = document.getElementById('popup-close');
+  /* ── CAROUSEL ── */
+  const track = document.getElementById('carousel-track');
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  const slides = track ? track.querySelectorAll('.carousel-slide') : [];
+  const carousel = track ? track.closest('.carousel') : null;
 
-  setTimeout(() => {
-    popup.classList.add('visible');
-  }, 7000);
+  if (track && slides.length) {
+    let index = 0;
+    let interval;
 
-  popupClose.addEventListener('click', () => {
-    popup.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 1, 1)';
-    popup.style.left = '-380px';
-  });
+    function goTo(i) {
+      index = i;
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+    }
+
+    function next() { goTo(index + 1); }
+    function prev() { goTo(index - 1); }
+
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    function startAuto() {
+      if (!interval) interval = setInterval(next, 4000);
+    }
+    function stopAuto() {
+      clearInterval(interval);
+      interval = null;
+    }
+
+    track.addEventListener('mouseenter', stopAuto);
+    track.addEventListener('mouseleave', startAuto);
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startAuto();
+        } else {
+          stopAuto();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(carousel);
+  }
 
 };
