@@ -124,11 +124,21 @@ main {
   margin-bottom: 10px;
 }
 
-.page-section li::before {
-  content: "—";
-  position: absolute;
-  left: 0;
-  color: #ff1493;
+.page-section ul[style*="list-style-type"] {
+  list-style: inherit;
+  padding-left: 24px;
+}
+
+.page-section ul[style*="list-style-type"] li {
+  padding-left: 0;
+}
+
+.page-section ul[style*="list-style-type"] li::before {
+  content: none;
+}
+
+.page-section ul[style*="list-style-type"] li::marker {
+  font-size: 1.5em;
 }
 
 .page-section a {
@@ -257,6 +267,23 @@ main {
   color: #ff1493;
 }
 
+.page-section ul[style*="list-style-type"] {
+  list-style: inherit;
+  padding-left: 24px;
+}
+
+.page-section ul[style*="list-style-type"] li {
+  padding-left: 0;
+}
+
+.page-section ul[style*="list-style-type"] li::before {
+  content: none;
+}
+
+.page-section ul[style*="list-style-type"] li::marker {
+  font-size: 1.5em;
+}
+
 
 
 #logo-svg {
@@ -313,12 +340,23 @@ main {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #111;
-  animation: blink 2s infinite;
+  transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
-@keyframes blink {
-  0%, 100% { color: #111; }
-  50% { color: #ff1493; }
+#scroll-text:hover {
+  transform: scale(1.1);
+}
+
+#scroll-arrow {
+  font-size: 48px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+#scroll-arrow:hover {
+  transform: scale(1.15);
 }
 
 .ecoslay-mark {
@@ -473,7 +511,12 @@ main {
 }
 
 .topbar-link[href="#open-call"] {
-  animation: blinkPink 1s ease-in-out infinite;
+  animation: blinkPink 1.6s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.topbar-link[href="#open-call"]:hover {
+  transform: scale(1.12);
 }
 
 @keyframes blinkPink {
