@@ -566,6 +566,10 @@ main {
     margin-top: 40px;
   }
 
+  #scroll-text {
+    font-size: 24px;
+  }
+
   #team .team-container {
     max-width: none;
   }
@@ -615,8 +619,8 @@ main {
 
   body {
     background-image: url('background19x6.jpg');
-    background-size: auto 100vh;
-    background-repeat: repeat;
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
   }
 }
