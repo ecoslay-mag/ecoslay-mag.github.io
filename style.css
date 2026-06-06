@@ -17,8 +17,9 @@
 
 body {
   background-color: var(--pink);
-  background-image: url('background.webp');
-  background-size: 120%;
+  background-image: url('background19x6.jpg');
+  background-size: auto 100vh;
+  background-repeat: repeat-x;
   background-position: center;
   background-attachment: fixed;
   min-height: 100vh;
@@ -492,6 +493,12 @@ main {
     width: 100%;
   }
 
+  #hero-subtitle {
+    font-size: 18px;
+    padding: 20px 28px;
+    margin-top: 40px;
+  }
+
   #team .team-container {
     max-width: none;
   }
@@ -537,10 +544,5 @@ main {
     font-family: 'Bebas Neue', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-  }
-
-  body {
-    background-size: cover;
-    background-position: 60% center;
   }
 }
