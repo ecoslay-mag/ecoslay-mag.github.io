@@ -621,6 +621,5 @@ main {
     background-image: url('background.webp');
     background-size: 350%;
     background-position: center;
-    background-attachment: scroll;
   }
 }
