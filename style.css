@@ -618,8 +618,17 @@ main {
   }
 
   body {
-    background-image: url('background.webp');
-    background-size: 350%;
+    background: none;
+    background-color: var(--pink);
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url('background19x6.jpg');
+    background-size: cover;
     background-position: center;
   }
 }
