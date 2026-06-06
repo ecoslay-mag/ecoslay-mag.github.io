@@ -1,5 +1,19 @@
 window.onload = function () {
 
+  /* ── HAMBURGER TOGGLE ── */
+  const navToggle = document.getElementById('nav-toggle');
+  const topbar = document.getElementById('topbar');
+  if (navToggle && topbar) {
+    navToggle.addEventListener('click', () => {
+      topbar.classList.toggle('nav-open');
+    });
+    document.querySelectorAll('.topbar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        topbar.classList.remove('nav-open');
+      });
+    });
+  }
+
   /* ── SMOOTH SCROLL ── */
   document.querySelectorAll('.topbar-link').forEach(link => {
     link.addEventListener('click', e => {

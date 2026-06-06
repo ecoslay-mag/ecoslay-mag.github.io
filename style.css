@@ -461,20 +461,86 @@ main {
   color: #ff1493;
 }
 
+#nav-toggle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .page-section {
+    max-width: 95vw;
+    padding: 40px 24px;
+  }
+
+  .page-section p,
+  .page-section li {
+    font-size: 16px;
+  }
+
+  .page-section h2 {
+    font-size: 24px;
+  }
+
+  .page-section h3 {
+    font-size: 20px;
+  }
+
+  .page-section h4 {
+    font-size: 18px;
+  }
+
+  .carousel {
+    width: 100%;
+  }
+
+  #team .team-container {
+    max-width: none;
+  }
+}
+
 @media (max-width: 600px) {
   #topbar {
-    gap: 16px;
+    justify-content: flex-end;
+    gap: 0;
     padding: 0 12px;
     height: 52px;
   }
+
   .topbar-link {
+    display: none;
     font-size: 16px;
-    height: 52px;
-    line-height: 52px;
-    padding: 0 2px;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 16px;
+    white-space: nowrap;
   }
+
+  #topbar.nav-open .topbar-link {
+    display: block;
+  }
+
+  #topbar.nav-open {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 8px 12px;
+    gap: 0;
+  }
+
+  #nav-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 8px 4px;
+    color: #111;
+    font-family: 'Bebas Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
   body {
-    background-size: 350%;
-    background-position: center;
+    background-size: cover;
+    background-position: 60% center;
   }
 }
