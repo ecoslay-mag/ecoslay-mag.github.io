@@ -180,27 +180,35 @@ main {
   font-size: 22px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  flex-shrink: 0;
+  flex: 0 0 25%;
+}
+
+.event-header:hover .event-meta,
+.event-item.open .event-meta {
+  font-weight: 700;
 }
 
 .event-meta {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  color: #999;
-  margin-right: auto;
+  font-weight: 550;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  flex: 1;
 }
 
 .event-toggle {
-  font-size: 24px;
+  font-size: 38px;
   font-weight: 300;
-  color: #ccc;
-  transition: transform 0.3s ease, color 0.3s ease;
+  color: #ff1493;
+  transition: transform 0.3s ease;
   flex-shrink: 0;
+  margin-left: 20px;
+  line-height: 1;
 }
 
 .event-item.open .event-toggle {
   transform: rotate(45deg);
-  color: #ff1493;
 }
 
 .event-body {
@@ -211,16 +219,24 @@ main {
 }
 
 .event-item.open .event-body {
-  max-height: 600px;
+  max-height: 1200px;
   padding-bottom: 16px;
   opacity: 1;
 }
 
 .event-body p {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #555;
+  font-size: 20px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.event-image {
+  width: 33%;
+  height: auto;
+  display: block;
+  margin: 0 auto 16px;
+  border-radius: 8px;
 }
 
 /* ── CAROUSEL ── */
@@ -647,6 +663,11 @@ main {
 
   .event-title {
     font-size: 18px;
+  }
+
+  .event-body p {
+    font-size: 16px;
+    line-height: 1.8;
   }
 }
 
