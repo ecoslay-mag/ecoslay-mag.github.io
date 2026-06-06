@@ -31,6 +31,7 @@ body {
 main {
   padding: 92px 24px 40px;
   min-height: 100vh;
+  position: relative;
 }
 
 .stage {
@@ -42,6 +43,7 @@ main {
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 92px - 40px);
+  position: relative;
 }
 
 .page-section {
@@ -254,8 +256,8 @@ main {
 
 #hero-subtitle {
   opacity: 0;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
   font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -278,6 +280,96 @@ main {
   50%  { border-radius: 45% 55% 70% 30% / 55% 45% 65% 35%; }
   75%  { border-radius: 65% 35% 40% 60% / 35% 65% 35% 65%; }
   100% { border-radius: 35% 65% 60% 40% / 60% 40% 60% 40%; }
+}
+
+/* ── SCROLL PROMPT ── */
+#scroll-prompt {
+  opacity: 0;
+  position: absolute;
+  bottom: -100px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+#scroll-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #111;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { color: #111; }
+  50% { color: #ff1493; }
+}
+
+.ecoslay-mark {
+  color: #ff1493;
+  font-weight: bold;
+}
+
+/* ── TEAM ── */
+#team .team-container {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+#team .team-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#team .team-contours {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#team .team-contours path {
+  fill: transparent;
+  stroke: transparent;
+  transition: fill 0.3s, stroke 0.3s;
+  cursor: pointer;
+}
+
+#team .team-contours path:hover {
+  fill: rgba(255, 20, 147, 0.3);
+  stroke: #ff1493;
+  stroke-width: 0.5px;
+}
+
+.team-label {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff1493;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  padding: 8px 28px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.team-label.visible {
+  opacity: 1;
 }
 
 /* ── TOP BAR ── */

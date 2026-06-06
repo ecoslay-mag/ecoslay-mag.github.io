@@ -57,7 +57,20 @@ window.onload = function () {
       opacity: 1,
       y: 0,
       duration: 0.6
-    }, "-=0.3");
+    }, "-=0.3")
+    .to("#scroll-prompt", {
+      opacity: 1,
+      duration: 0.5
+    }, "-=0.1");
+
+  /* ── SCROLL PROMPT CLICK ── */
+  const scrollPrompt = document.getElementById('scroll-prompt');
+  if (scrollPrompt) {
+    scrollPrompt.addEventListener('click', () => {
+      const about = document.getElementById('about');
+      if (about) about.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 
   /* ── CAROUSEL ── */
   const track = document.getElementById('carousel-track');
@@ -106,5 +119,18 @@ window.onload = function () {
 
     observer.observe(carousel);
   }
+
+  /* ── TEAM LABEL ── */
+  const teamLabel = document.getElementById('team-label');
+  const teamPaths = document.querySelectorAll('.team-contours path');
+  teamPaths.forEach(path => {
+    path.addEventListener('mouseenter', () => {
+      teamLabel.textContent = path.id;
+      teamLabel.classList.add('visible');
+    });
+    path.addEventListener('mouseleave', () => {
+      teamLabel.classList.remove('visible');
+    });
+  });
 
 };
