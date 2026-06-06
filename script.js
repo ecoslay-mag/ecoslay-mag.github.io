@@ -147,4 +147,16 @@ window.onload = function () {
     });
   });
 
+  /* ── EVENTS ACCORDION ── */
+  document.querySelectorAll('.event-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.event-item.open').forEach(el => {
+        el.classList.remove('open');
+      });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
 };

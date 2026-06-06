@@ -152,6 +152,77 @@ main {
   color: #ff1493;
 }
 
+/* ── EVENTS ACCORDION ── */
+.event-item {
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.event-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 14px 0;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.event-header:hover {
+  color: #ff1493;
+}
+
+.event-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.event-meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #999;
+  margin-right: auto;
+}
+
+.event-toggle {
+  font-size: 24px;
+  font-weight: 300;
+  color: #ccc;
+  transition: transform 0.3s ease, color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.event-item.open .event-toggle {
+  transform: rotate(45deg);
+  color: #ff1493;
+}
+
+.event-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.event-item.open .event-body {
+  max-height: 600px;
+  padding-bottom: 16px;
+  opacity: 1;
+}
+
+.event-body p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+}
+
 /* ── CAROUSEL ── */
 .carousel {
   position: relative;
@@ -572,6 +643,10 @@ main {
 
   #team .team-container {
     max-width: none;
+  }
+
+  .event-title {
+    font-size: 18px;
   }
 }
 
