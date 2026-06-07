@@ -86,6 +86,21 @@ window.onload = function () {
     });
   }
 
+  /* ── ABSORB DISSOLVE ── */
+  const absorbDisp = document.querySelector("#absorb-disp");
+  if (absorbDisp) {
+    gsap.to(absorbDisp, {
+      attr: { scale: 0 },
+      duration: 0,
+      delay: 4,
+      onComplete: () => {
+        gsap.timeline({ repeat: -1, repeatDelay: 1 })
+          .to(absorbDisp, { attr: { scale: 70 }, duration: 4, ease: "power1.in" })
+          .to(absorbDisp, { attr: { scale: 0 }, duration: 2, ease: "power1.out" });
+      }
+    });
+  }
+
   /* ── CAROUSEL ── */
   const track = document.getElementById('carousel-track');
   const prevBtn = document.getElementById('carousel-prev');

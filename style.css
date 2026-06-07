@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
 * {
   margin: 0;
@@ -399,6 +400,26 @@ main {
   animation: slimeMorph 6s ease-in-out infinite;
 }
 
+#hero-subtitle em {
+  font-family: 'Permanent Marker', cursive;
+  color: var(--pink);
+  font-size: 25px;
+  font-style: normal;
+}
+
+.absorb-fade {
+  display: inline-block;
+  animation: absorbPulse 7s ease-in-out 4s infinite;
+  filter: url(#absorb-noise);
+}
+
+@keyframes absorbPulse {
+  0%   { color: #111; }
+  57%  { color: #fff; }
+  86%  { color: #111; }
+  100% { color: #111; }
+}
+
 @keyframes slimeMorph {
   0%   { border-radius: 35% 65% 60% 40% / 60% 40% 60% 40%; }
   25%  { border-radius: 60% 40% 50% 50% / 40% 60% 40% 60%; }
@@ -433,6 +454,14 @@ main {
 
 #scroll-text:hover {
   transform: scale(1.1);
+}
+
+#scroll-text strong {
+  font-weight: 700;
+}
+
+#scroll-text .scroll-dim {
+  font-size: 0.85em;
 }
 
 #scroll-arrow {
@@ -651,6 +680,10 @@ main {
     font-size: 18px;
     padding: 20px 28px;
     margin-top: 40px;
+  }
+
+  #hero-subtitle em {
+    font-size: 12px;
   }
 
   #scroll-text {
