@@ -403,7 +403,7 @@ main {
 #hero-subtitle em {
   font-family: 'Permanent Marker', cursive;
   color: var(--pink);
-  font-size: 25px;
+  font-size: 24px;
   font-style: normal;
 }
 
@@ -469,10 +469,16 @@ main {
   line-height: 1;
   transition: transform 0.2s ease;
   cursor: pointer;
+  animation: arrowBounce 1.5s ease-in-out infinite;
 }
 
 #scroll-arrow:hover {
   transform: scale(1.15);
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
 }
 
 .ecoslay-mark {

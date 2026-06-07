@@ -28,7 +28,7 @@ window.onload = function () {
   const turb = document.querySelector("#turb");
   const disp = document.querySelector("#disp");
 
-  const melt = gsap.timeline({ repeat: -1, repeatDelay: 1.5 });
+  const melt = gsap.timeline({ repeat: 0, repeatDelay: 1.5 });
 
   melt
     .to(turb, {
