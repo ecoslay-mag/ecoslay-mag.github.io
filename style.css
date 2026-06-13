@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
-  font-size: clamp(16px, 15px + 0.35vw, 20px);
+  font-size: clamp(16px, 14.5px + 0.4vw, 20px);
   overflow-x: hidden;
   }
 
@@ -61,7 +61,7 @@ main {
 
 .page-section h2 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 22px + 0.5vw, 32px);
+  font-size: clamp(24px, 21px + 0.8vw, 32px);
   font-weight: 550;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -82,7 +82,7 @@ main {
 
 .page-section h3 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(20px, 19px + 0.3vw, 28px);
+  font-size: clamp(20px, 17px + 0.8vw, 28px);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-top: 48px;
@@ -92,7 +92,7 @@ main {
 
 .page-section h4 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(18px, 17px + 0.25vw, 22px);
+  font-size: clamp(18px, 16.5px + 0.4vw, 22px);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-top: 28px;
@@ -103,7 +103,7 @@ main {
 .page-section p {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
-  font-size: clamp(16px, 15px + 0.35vw, 20px);
+  font-size: clamp(16px, 14.5px + 0.4vw, 20px);
   line-height: 1.8;
   color: #333;
   margin-bottom: 20px;
@@ -118,7 +118,7 @@ main {
 .page-section li {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
-  font-size: clamp(16px, 15px + 0.35vw, 20px);
+  font-size: clamp(16px, 14.5px + 0.4vw, 20px);
   line-height: 1.8;
   color: #333;
   padding-left: 24px;
@@ -200,7 +200,7 @@ main {
 .event-meta {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
-  font-size: clamp(16px, 15px + 0.35vw, 20px);
+  font-size: clamp(16px, 14.5px + 0.4vw, 20px);
   line-height: 1.8;
   color: #333;
   flex: 1;
@@ -235,7 +235,7 @@ main {
 
 .event-body p {
   margin: 0;
-  font-size: clamp(16px, 15px + 0.35vw, 20px);
+  font-size: clamp(16px, 14.5px + 0.4vw, 20px);
   line-height: 1.8;
   color: #333;
 }
@@ -323,7 +323,7 @@ main {
 #hero-subtitle {
   opacity: 0;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(18px, 17px + 0.3vw, 28px);
+  font-size: clamp(18px, 14.5px + 1vw, 28px);
   font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -343,7 +343,7 @@ main {
 #hero-subtitle em {
   font-family: 'Permanent Marker', cursive;
   color: var(--pink);
-  font-size: clamp(12px, 11px + 0.25vw, 24px);
+  font-size: clamp(12px, 7.5px + 1.2vw, 24px);
   font-style: normal;
 }
 
@@ -384,7 +384,7 @@ main {
 
 #scroll-text {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 22px + 0.5vw, 35px);
+  font-size: clamp(24px, 20px + 1.1vw, 35px);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #111;
@@ -555,7 +555,7 @@ main {
 
 .topbar-link {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(16px, 14px + 0.8vw, 28px);
+  font-size: clamp(16px, 11.5px + 1.2vw, 28px);
   font-weight: 550;
   letter-spacing: 0.12em;
   text-decoration: none;
