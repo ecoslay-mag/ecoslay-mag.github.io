@@ -142,6 +142,13 @@ main {
   font-size: 1.5em;
 }
 
+.page-section li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #ff1493;
+}
+
 .page-section a {
   color: #111;
   text-decoration: underline;
@@ -178,7 +185,7 @@ main {
 
 .event-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   flex: 0 0 25%;
@@ -192,7 +199,7 @@ main {
 .event-meta {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.8;
   color: #333;
   flex: 1;
@@ -302,74 +309,6 @@ main {
 
 .carousel-next {
   right: 16px;
-}
-
-.page-section h2 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 30px;
-  font-weight: 550;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 28px;
-  color: #111;
-}
-
-.page-section h3 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 25px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-top: 48px;
-  margin-bottom: 20px;
-  color: #111;
-}
-
-.page-section p {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 17px;
-  line-height: 1.8;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.page-section ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 20px;
-}
-
-.page-section li {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 17px;
-  line-height: 1.8;
-  color: #333;
-  padding-left: 24px;
-  position: relative;
-  margin-bottom: 10px;
-}
-
-.page-section li::before {
-  content: "—";
-  position: absolute;
-  left: 0;
-  color: #ff1493;
-}
-
-.page-section ul[style*="list-style-type"] {
-  list-style: inherit;
-  padding-left: 24px;
-}
-
-.page-section ul[style*="list-style-type"] li {
-  padding-left: 0;
-}
-
-.page-section ul[style*="list-style-type"] li::before {
-  content: none;
-}
-
-.page-section ul[style*="list-style-type"] li::marker {
-  font-size: 1.5em;
 }
 
 
@@ -701,7 +640,7 @@ main {
   }
 
   .event-title {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .event-body p {
