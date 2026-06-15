@@ -586,6 +586,12 @@ main {
   50% { color: #ff1493; }
 }
 
+h3.open-call-heading {
+  animation: blinkPink 1.6s ease-in-out infinite;
+  color: #111;
+  font-size: clamp(22px, 19px + 1vw, 34px);
+}
+
 #nav-toggle {
   display: none;
 }
@@ -643,7 +649,7 @@ main {
     gap: 0;
   }
 
-  #nav-toggle {
+#nav-toggle {
     display: block;
     background: none;
     border: none;
