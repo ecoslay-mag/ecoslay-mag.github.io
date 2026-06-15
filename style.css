@@ -100,6 +100,21 @@ main {
   color: #111;
 }
 
+.bookstore-grid {
+  columns: 3;
+  column-gap: 40px;
+  margin-top: 32px;
+}
+
+.bookstore-grid > div {
+  break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+.bookstore-grid h4 {
+  margin-top: 0;
+}
+
 .page-section p {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
