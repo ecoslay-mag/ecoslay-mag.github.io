@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
 * {
   margin: 0;
@@ -365,10 +364,8 @@ main {
   animation: slimeMorph 6s ease-in-out infinite;
 }
 
-#hero-subtitle em {
-  font-family: 'Permanent Marker', cursive;
-  color: var(--pink);
-  font-size: clamp(12px, 7.5px + 1.2vw, 24px);
+.spaced {
+  letter-spacing: 0.35em;
   font-style: normal;
 }
 
