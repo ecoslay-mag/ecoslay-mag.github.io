@@ -372,19 +372,6 @@ main {
   font-style: normal;
 }
 
-.absorb-fade {
-  display: inline-block;
-  animation: absorbPulse 7s ease-in-out 4s infinite;
-  filter: url(#absorb-noise);
-}
-
-@keyframes absorbPulse {
-  0%   { color: #111; }
-  57%  { color: #fff; }
-  86%  { color: #111; }
-  100% { color: #111; }
-}
-
 @keyframes slimeMorph {
   0%   { border-radius: 35% 65% 60% 40% / 60% 40% 60% 40%; }
   25%  { border-radius: 60% 40% 50% 50% / 40% 60% 40% 60%; }
