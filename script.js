@@ -134,6 +134,58 @@ window.onload = function () {
     observer.observe(carousel);
   }
 
+  /* ── ABOUT CAROUSEL ── */
+  const aboutTrack = document.getElementById('about-track');
+  const aboutPrev = document.getElementById('about-prev');
+  const aboutNext = document.getElementById('about-next');
+  const aboutSlides = aboutTrack ? aboutTrack.querySelectorAll('.carousel-slide') : [];
+  const aboutCarousel = aboutTrack ? aboutTrack.closest('.carousel') : null;
+
+  if (aboutTrack && aboutSlides.length) {
+    let idx = 0;
+    let interval;
+
+    function aboutGoTo(i) {
+      idx = i;
+      if (idx < 0) idx = aboutSlides.length - 1;
+      if (idx >= aboutSlides.length) idx = 0;
+      aboutTrack.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      if (idx === 0) {
+        const gif = aboutSlides[0].querySelector('img');
+        if (gif) gif.src = gif.src;
+      }
+      startAboutAuto();
+    }
+
+    function aboutNextSlide() { aboutGoTo(idx + 1); }
+    function aboutPrevSlide() { aboutGoTo(idx - 1); }
+
+    aboutNext.addEventListener('click', aboutNextSlide);
+    aboutPrev.addEventListener('click', aboutPrevSlide);
+
+    function startAboutAuto() {
+      stopAboutAuto();
+      const delay = idx === 0 ? 9000 : 4000;
+      interval = setInterval(aboutNextSlide, delay);
+    }
+    function stopAboutAuto() {
+      clearInterval(interval);
+      interval = null;
+    }
+
+    aboutTrack.addEventListener('mouseenter', stopAboutAuto);
+    aboutTrack.addEventListener('mouseleave', startAboutAuto);
+
+    const aboutObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) startAboutAuto();
+        else stopAboutAuto();
+      });
+    }, { threshold: 0.5 });
+
+    aboutObserver.observe(aboutCarousel);
+  }
+
   /* ── TEAM LABEL ── */
   const teamLabel = document.getElementById('team-label');
   const teamPaths = document.querySelectorAll('.team-contours path');
