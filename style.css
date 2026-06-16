@@ -342,6 +342,7 @@ main {
   width: 100%;
   height: auto;
   overflow: visible;
+  margin-top: 180px;
 }
 
 #hero-subtitle {
@@ -404,28 +405,6 @@ main {
   align-items: center;
   gap: 4px;
   cursor: pointer;
-}
-
-#scroll-text {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 20px + 1.1vw, 35px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #111;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
-
-#scroll-text:hover {
-  transform: scale(1.1);
-}
-
-#scroll-text strong {
-  font-weight: 700;
-}
-
-#scroll-text .scroll-dim {
-  font-size: 0.85em;
 }
 
 #scroll-arrow {
