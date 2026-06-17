@@ -564,7 +564,8 @@ main {
   50% { color: #ff1493; }
 }
 
-h3.open-call-heading {
+h3.open-call-heading,
+h3.apply-heading {
   animation: blinkPink 1.6s ease-in-out infinite;
   color: #111;
   font-size: clamp(22px, 19px + 1vw, 34px);
