@@ -114,15 +114,6 @@ main {
   margin-top: 0;
 }
 
-.topics-grid ul {
-  columns: 2;
-  column-gap: 100px;
-}
-
-.topics-grid li {
-  break-inside: avoid;
-}
-
 .page-section p {
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
