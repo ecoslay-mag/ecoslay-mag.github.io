@@ -4,7 +4,7 @@
 
 ### 0. Clone the repository
 ```bash
-git clone git@github.com:ecoslay-mag/website.git
+git clone git@github.com:ecoslay-mag/ecoslay-mag.github.io.git
 cd website
 ```
 
