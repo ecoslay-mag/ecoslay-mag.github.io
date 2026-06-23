@@ -16,9 +16,9 @@ Run opencode inside the root directory of the git. Describe the changes you want
 
 ### 2. Preview locally with a local server
 ```bash
-python3 -m http.server 8000
+nohup python3 -m http.server 8000 > /dev/null 2>&1 &
 ```
-Then open `http://localhost:8000` in a browser to preview the changes.
+Then open `http://localhost:8000` in a browser to preview the changes. Refresh the page after editing any file.
 
 ### 3. Commit and push to deploy
 ```bash
