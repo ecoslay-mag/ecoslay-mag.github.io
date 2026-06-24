@@ -731,3 +731,69 @@ h3.apply-heading {
     background-position: center;
   }
 }
+
+@media (max-width: 480px) {
+  body {
+    font-size: clamp(12px, 11px + 0.5vw, 14px);
+  }
+
+  .page-section {
+    padding: 20px 12px;
+    margin: 16px auto;
+  }
+
+  .page-section h2 {
+    font-size: clamp(17px, 15px + 1vw, 20px);
+  }
+
+  .page-section h3 {
+    font-size: clamp(15px, 13px + 1vw, 17px);
+  }
+
+  .page-section p,
+  .page-section li,
+  .event-body p,
+  .event-meta {
+    font-size: clamp(12px, 11px + 0.5vw, 14px);
+  }
+
+  #hero-subtitle {
+    font-size: clamp(12px, 10px + 1.5vw, 15px);
+    padding: 14px 16px;
+    margin-top: 30px;
+  }
+
+  .topbar-link {
+    font-size: clamp(12px, 10px + 1.5vw, 14px);
+  }
+
+  .event-title {
+    font-size: 17px;
+  }
+
+  .event-header {
+    padding: 8px 0;
+  }
+
+  .member {
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  .member-headshot {
+    width: 80px;
+  }
+
+  .page-section h2.section-heading {
+    padding: 6px 16px;
+  }
+
+  .impressum-section {
+    max-width: 95vw;
+  }
+
+  .bookstore-grid {
+    columns: 2;
+    column-gap: 16px;
+  }
+}
