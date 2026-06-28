@@ -813,7 +813,9 @@ h3.apply-heading {
 }
 
 #scooby-after,
-#scooby-cc {
+#scooby-cc,
+#scooby-worm,
+#scooby-ecoslay {
   position: absolute;
   inset: 0;
   width: 100%;
