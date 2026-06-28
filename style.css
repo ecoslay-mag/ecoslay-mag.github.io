@@ -791,6 +791,7 @@ h3.apply-heading {
 
 /* ── UNIFIED NOODLE CRAWL ── */
 #scoobydoo-unity {
+  position: relative;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -874,7 +875,7 @@ h3.apply-heading {
 #scooby-scroll-arrow {
   font-size: 48px;
   line-height: 1;
-  color: #ff40a3;
+  color: #141414;
   transition: transform 0.2s ease;
   cursor: pointer;
   animation: arrowBounce 1.5s ease-in-out infinite;
