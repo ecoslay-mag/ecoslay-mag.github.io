@@ -812,7 +812,8 @@ h3.apply-heading {
   width: auto;
 }
 
-#scooby-after {
+#scooby-after,
+#scooby-cc {
   position: absolute;
   inset: 0;
   width: 100%;
