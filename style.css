@@ -857,6 +857,33 @@ h3.apply-heading {
   transform: scale(0);
 }
 
+#scooby-scroll-prompt {
+  opacity: 0;
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#scooby-scroll-arrow {
+  font-size: 48px;
+  line-height: 1;
+  color: #ff40a3;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  animation: arrowBounce 1.5s ease-in-out infinite;
+}
+
+#scooby-scroll-arrow:hover {
+  transform: scale(1.15);
+}
+
 @media (max-width: 480px) {
   .impressum-section {
     max-width: 95vw;

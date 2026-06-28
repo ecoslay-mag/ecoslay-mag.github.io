@@ -214,8 +214,8 @@ window.onload = function () {
   /* ── UNIFIED NOODLE CRAWL ── */
   const unitySection = document.getElementById('scoobydoo-unity');
   if (unitySection) {
-    const STROKE_STAGGER = 0.045;
-    const STROKE_DRAW_TIME = 1.25;
+    const STROKE_STAGGER = 0.06;
+    const STROKE_DRAW_TIME = 2.0;
     const OUTLINE_WIDTH = 7;
     const STROKE_DRAW_ORDER = [0, 12, 2, 10, 4, 8, 6, 1, 3, 5, 7, 9, 11];
 
@@ -237,6 +237,7 @@ window.onload = function () {
     const sparkles = gsap.utils.toArray('.sparkle');
     const beforeImg = document.getElementById('scooby-before');
     const afterImg = document.getElementById('scooby-after');
+    const ccImg = document.getElementById('scooby-cc');
     const wormImg = document.getElementById('scooby-worm');
     const ecoslayImg = document.getElementById('scooby-ecoslay');
 
@@ -251,6 +252,45 @@ window.onload = function () {
     }));
     const coveredAt = Math.max(...drawSteps.map(step => step.at + step.duration));
 
+    const CYCLE_GAP = 6;
+
+    function addCycle(tl, offset, hideImg, showImg, reverse) {
+      tl.call(() => {
+        strokes.forEach(({ layers, length }) => {
+          const val = reverse ? -length : length;
+          layers.forEach(layer => layer.style.strokeDashoffset = val);
+        });
+      }, [], offset);
+
+      drawSteps.forEach(({ strokeIndex, at, duration }) => {
+        tl.to(
+          strokes[strokeIndex].layers,
+          { strokeDashoffset: 0, duration, ease: 'power2.out' },
+          offset + at,
+        );
+      });
+
+      tl.set(showImg, { opacity: 1 }, offset + coveredAt - 0.15);
+      tl.set(hideImg, { opacity: 0 }, offset + coveredAt - 0.15);
+
+      [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
+        const { layers, length } = strokes[strokeIndex];
+        tl.to(
+          layers,
+          { strokeDashoffset: reverse ? length : -length, duration: drawDuration(order), ease: 'power2.in' },
+          offset + coveredAt + startTime(order) + timingWobble(order),
+        );
+      });
+
+      sparkles.forEach((sparkle, index) => {
+        const popAt = offset + coveredAt - 0.4 + index * 0.25;
+        tl
+          .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
+            { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
+          .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
+      });
+    }
+
     let started = false;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -260,106 +300,38 @@ window.onload = function () {
 
           const timeline = gsap.timeline({ delay: 2 });
 
-          // ── Cycle 1: before → trash (pink, same direction) ──
-          drawSteps.forEach(({ strokeIndex, at, duration }) => {
-            timeline.to(
-              strokes[strokeIndex].layers,
-              { strokeDashoffset: 0, duration, ease: 'power2.out' },
-              at,
-            );
-          });
-
-          timeline.set(afterImg, { opacity: 1 }, coveredAt - 0.15);
-          timeline.set(beforeImg, { opacity: 0 }, coveredAt - 0.15);
-
-          [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
-            const { layers, length } = strokes[strokeIndex];
-            timeline.to(
-              layers,
-              { strokeDashoffset: -length, duration: drawDuration(order), ease: 'power2.in' },
-              coveredAt + startTime(order) + timingWobble(order),
-            );
-          });
-
-          sparkles.forEach((sparkle, index) => {
-            const popAt = coveredAt - 0.4 + index * 0.25;
-            timeline
-              .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
-                { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
-              .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
-          });
-
-          // ── Cycle 2: trash → worm (pink, same direction) ──
-          const cycle2Start = coveredAt + 2.5;
-
-          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 1 }, cycle2Start);
-
-          drawSteps.forEach(({ strokeIndex, at, duration }) => {
-            timeline.to(
-              strokes[strokeIndex].layers,
-              { strokeDashoffset: 0, duration, ease: 'power2.out' },
-              cycle2Start + at,
-            );
-          });
-
-          timeline.set(wormImg, { opacity: 1 }, cycle2Start + coveredAt - 0.15);
-          timeline.set(afterImg, { opacity: 0 }, cycle2Start + coveredAt - 0.15);
-
-          [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
-            const { layers, length } = strokes[strokeIndex];
-            timeline.to(
-              layers,
-              { strokeDashoffset: -length, duration: drawDuration(order), ease: 'power2.in' },
-              cycle2Start + coveredAt + startTime(order) + timingWobble(order),
-            );
-          });
-
-          sparkles.forEach((sparkle, index) => {
-            const popAt = cycle2Start + coveredAt - 0.4 + index * 0.25;
-            timeline
-              .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
-                { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
-              .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
-          });
-
-          // ── Cycle 3: worm → ecoslay (WHITE, opposite direction) ──
-          const cycle3Start = cycle2Start + coveredAt + 2.5;
+          addCycle(timeline, 0, beforeImg, afterImg);
+          const c2 = coveredAt + CYCLE_GAP;
+          addCycle(timeline, c2, afterImg, ccImg);
+          const c3 = c2 + coveredAt + CYCLE_GAP;
+          addCycle(timeline, c3, ccImg, wormImg);
+          const c4 = c3 + coveredAt + CYCLE_GAP;
 
           timeline.call(() => {
             strokes.forEach(({ layers }) => {
-              layers.forEach(layer => layer.style.stroke = '#ffffff');
+              layers[1].style.stroke = '#ffb3c6';
             });
-          }, [], cycle3Start);
+          }, [], c4);
 
-          drawSteps.forEach(({ strokeIndex, at, duration }) => {
-            timeline.to(
-              strokes[strokeIndex].layers,
-              { strokeDashoffset: 0, duration, ease: 'power2.out' },
-              cycle3Start + at,
-            );
-          });
+          addCycle(timeline, c4, wormImg, ecoslayImg, true);
 
-          timeline.set(ecoslayImg, { opacity: 1 }, cycle3Start + coveredAt - 0.15);
-          timeline.set(wormImg, { opacity: 0 }, cycle3Start + coveredAt - 0.15);
+          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 0 }, c4 + coveredAt + 3);
 
-          [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
-            const { layers, length } = strokes[strokeIndex];
-            timeline.to(
-              layers,
-              { strokeDashoffset: length, duration: drawDuration(order), ease: 'power2.in' },
-              cycle3Start + coveredAt + startTime(order) + timingWobble(order),
-            );
-          });
+          timeline.call(() => {
+            const p = document.getElementById('scooby-scroll-prompt');
+            if (p) {
+              p.style.opacity = 1;
+              p.style.pointerEvents = 'auto';
+            }
+          }, [], c4 + coveredAt + 3.5);
 
-          sparkles.forEach((sparkle, index) => {
-            const popAt = cycle3Start + coveredAt - 0.4 + index * 0.25;
-            timeline
-              .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
-                { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
-              .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
-          });
-
-          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 0 }, cycle3Start + coveredAt + 3);
+          const scrollPrompt = document.getElementById('scooby-scroll-prompt');
+          if (scrollPrompt) {
+            scrollPrompt.addEventListener('click', () => {
+              const target = document.getElementById('about');
+              if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+          }
         }
       });
     }, { threshold: 0.5 });
