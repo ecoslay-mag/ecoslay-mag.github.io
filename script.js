@@ -81,8 +81,8 @@ window.onload = function () {
   const scrollPrompt = document.getElementById('scroll-prompt');
   if (scrollPrompt) {
     scrollPrompt.addEventListener('click', () => {
-      const about = document.getElementById('about');
-      if (about) about.scrollIntoView({ behavior: 'smooth' });
+      const target = document.getElementById('scoobydoo-unity');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
@@ -211,4 +211,131 @@ window.onload = function () {
     });
   });
 
+  /* ── UNIFIED NOODLE CRAWL ── */
+  const unitySection = document.getElementById('scoobydoo-unity');
+  if (unitySection) {
+    const STROKE_STAGGER = 0.06;
+    const STROKE_DRAW_TIME = 2.0;
+    const OUTLINE_WIDTH = 7;
+    const STROKE_DRAW_ORDER = [0, 12, 2, 10, 4, 8, 6, 1, 3, 5, 7, 9, 11];
+
+    const strokes = Array.from(document.querySelectorAll('.stroke')).map(fill => {
+      const fillWidth = parseFloat(fill.getAttribute('stroke-width'));
+      const outline = fill.cloneNode(true);
+      outline.setAttribute('stroke', '#141414');
+      fill.setAttribute('stroke-width', fillWidth - OUTLINE_WIDTH);
+      fill.before(outline);
+      const length = fill.getTotalLength();
+      const layers = [outline, fill];
+      layers.forEach(layer => {
+        layer.style.strokeDasharray = length;
+        layer.style.strokeDashoffset = length;
+      });
+      return { layers, length };
+    });
+
+    const sparkles = gsap.utils.toArray('.sparkle');
+    const beforeImg = document.getElementById('scooby-before');
+    const afterImg = document.getElementById('scooby-after');
+    const ccImg = document.getElementById('scooby-cc');
+    const wormImg = document.getElementById('scooby-worm');
+    const ecoslayImg = document.getElementById('scooby-ecoslay');
+
+    const startTime = (order) => order * STROKE_STAGGER;
+    const timingWobble = (order) => (order % 2 === 0 ? 0 : STROKE_STAGGER * 0.6);
+    const drawDuration = (order) => STROKE_DRAW_TIME + (order % 3) * 0.12;
+
+    const drawSteps = STROKE_DRAW_ORDER.map((strokeIndex, order) => ({
+      strokeIndex,
+      at: startTime(order) + timingWobble(order),
+      duration: drawDuration(order),
+    }));
+    const coveredAt = Math.max(...drawSteps.map(step => step.at + step.duration));
+
+    const CYCLE_GAP = 6;
+
+    function addCycle(tl, offset, hideImg, showImg, reverse) {
+      tl.call(() => {
+        strokes.forEach(({ layers, length }) => {
+          const val = reverse ? -length : length;
+          layers.forEach(layer => layer.style.strokeDashoffset = val);
+        });
+      }, [], offset);
+
+      drawSteps.forEach(({ strokeIndex, at, duration }) => {
+        tl.to(
+          strokes[strokeIndex].layers,
+          { strokeDashoffset: 0, duration, ease: 'power2.out' },
+          offset + at,
+        );
+      });
+
+      tl.set(showImg, { opacity: 1 }, offset + coveredAt - 0.15);
+      tl.set(hideImg, { opacity: 0 }, offset + coveredAt - 0.15);
+
+      [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
+        const { layers, length } = strokes[strokeIndex];
+        tl.to(
+          layers,
+          { strokeDashoffset: reverse ? length : -length, duration: drawDuration(order), ease: 'power2.in' },
+          offset + coveredAt + startTime(order) + timingWobble(order),
+        );
+      });
+
+      sparkles.forEach((sparkle, index) => {
+        const popAt = offset + coveredAt - 0.4 + index * 0.25;
+        tl
+          .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
+            { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
+          .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
+      });
+    }
+
+    let started = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !started) {
+          started = true;
+          observer.disconnect();
+
+          const timeline = gsap.timeline({ delay: 2 });
+
+          addCycle(timeline, 0, beforeImg, afterImg);
+          const c2 = coveredAt + CYCLE_GAP;
+          addCycle(timeline, c2, afterImg, ccImg);
+          const c3 = c2 + coveredAt + CYCLE_GAP;
+          addCycle(timeline, c3, ccImg, wormImg);
+          const c4 = c3 + coveredAt + CYCLE_GAP;
+
+          timeline.call(() => {
+            strokes.forEach(({ layers }) => {
+              layers[1].style.stroke = '#ffb3c6';
+            });
+          }, [], c4);
+
+          addCycle(timeline, c4, wormImg, ecoslayImg, true);
+
+          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 0 }, c4 + coveredAt + 3);
+
+          timeline.call(() => {
+            const p = document.getElementById('scooby-scroll-prompt');
+            if (p) {
+              p.style.opacity = 1;
+              p.style.pointerEvents = 'auto';
+            }
+          }, [], c4 + coveredAt + 3.5);
+
+          const scrollPrompt = document.getElementById('scooby-scroll-prompt');
+          if (scrollPrompt) {
+            scrollPrompt.addEventListener('click', () => {
+              const target = document.getElementById('about');
+              if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(unitySection);
+  }
 };
