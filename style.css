@@ -579,6 +579,19 @@ main {
   50% { color: #ff1493; }
 }
 
+.deadline-banner {
+  font-size: clamp(20px, 18px + 1.5vw, 36px);
+  font-weight: bold;
+  color: #ff1493;
+  text-align: center;
+  animation: blinkRed 1s ease-in-out infinite;
+}
+
+@keyframes blinkRed {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 h3.open-call-heading,
 h3.apply-heading {
   animation: blinkPink 1.6s ease-in-out infinite;
