@@ -565,18 +565,8 @@ main {
   color: #ff1493;
 }
 
-.topbar-link[href="#open-call"] {
-  animation: blinkPink 1.6s ease-in-out infinite;
-  transition: transform 0.2s ease;
-}
-
 .topbar-link[href="#open-call"]:hover {
-  transform: scale(1.12);
-}
-
-@keyframes blinkPink {
-  0%, 100% { color: #111; }
-  50% { color: #ff1493; }
+  color: #ff1493;
 }
 
 .deadline-banner {
@@ -594,7 +584,6 @@ main {
 
 h3.open-call-heading,
 h3.apply-heading {
-  animation: blinkPink 1.6s ease-in-out infinite;
   color: #111;
   font-size: clamp(22px, 19px + 1vw, 34px);
 }
