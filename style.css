@@ -963,4 +963,17 @@ h3.apply-heading {
   #scoobydoo-unity {
     display: none;
   }
+
+  .stage {
+    min-height: calc(100vh - 92px);
+    min-height: calc(100svh - 92px);
+  }
+
+  #logo-svg {
+    margin-top: 40px;
+  }
+
+  #scroll-prompt {
+    bottom: 24px;
+  }
 }
