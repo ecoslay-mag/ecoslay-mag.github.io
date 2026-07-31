@@ -339,10 +339,27 @@ window.onload = function () {
     header.addEventListener('click', () => {
       const item = header.parentElement;
       const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.event-item.open').forEach(el => {
-        el.classList.remove('open');
+      if (wasOpen) {
+        item.classList.remove('open');
+        return;
+      }
+      const prevItems = document.querySelectorAll('.event-item.open');
+      const headerBefore = header.getBoundingClientRect().top + window.scrollY;
+
+      prevItems.forEach(el => {
+        const body = el.querySelector('.event-body');
+        if (body) body.style.transition = 'none';
       });
-      if (!wasOpen) item.classList.add('open');
+      prevItems.forEach(el => el.classList.remove('open'));
+      item.classList.add('open');
+
+      const headerAfter = header.getBoundingClientRect().top + window.scrollY;
+      window.scrollBy(0, headerAfter - headerBefore);
+
+      prevItems.forEach(el => {
+        const body = el.querySelector('.event-body');
+        if (body) body.style.transition = '';
+      });
     });
   });
 

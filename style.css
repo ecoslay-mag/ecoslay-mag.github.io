@@ -176,6 +176,11 @@ main {
 }
 
 /* ── EVENTS ACCORDION ── */
+.event-item,
+.event-body {
+  overflow-anchor: none;
+}
+
 .event-item {
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
@@ -191,6 +196,7 @@ main {
   cursor: pointer;
   padding: 14px 0;
   user-select: none;
+  scroll-margin-top: 80px;
   transition: color 0.2s;
 }
 
