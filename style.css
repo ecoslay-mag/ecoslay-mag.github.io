@@ -272,6 +272,10 @@ main {
   border-radius: 8px;
 }
 
+.event-image-sm {
+  width: 40%;
+}
+
 .event-image-row {
   display: flex;
   gap: 16px;
