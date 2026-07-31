@@ -231,6 +231,51 @@ window.onload = function () {
     snacksObserver.observe(snacksCarousel);
   }
 
+  /* ── BOOK RELEASE CAROUSEL ── */
+  const bookTrack = document.getElementById('book-release-track');
+  const bookPrev = document.getElementById('book-release-prev');
+  const bookNext = document.getElementById('book-release-next');
+  const bookSlides = bookTrack ? bookTrack.querySelectorAll('.carousel-slide') : [];
+  const bookCarousel = bookTrack ? bookTrack.closest('.carousel') : null;
+
+  if (bookTrack && bookSlides.length) {
+    let bIdx = 0;
+    let bInterval;
+
+    function bookGoTo(i) {
+      bIdx = i;
+      if (bIdx < 0) bIdx = bookSlides.length - 1;
+      if (bIdx >= bookSlides.length) bIdx = 0;
+      bookTrack.style.transform = 'translateX(-' + (bIdx * 100) + '%)';
+    }
+
+    function bookNextSlide() { bookGoTo(bIdx + 1); }
+    function bookPrevSlide() { bookGoTo(bIdx - 1); }
+
+    bookNext.addEventListener('click', bookNextSlide);
+    bookPrev.addEventListener('click', bookPrevSlide);
+
+    function startBookAuto() {
+      if (!bInterval) bInterval = setInterval(bookNextSlide, 4000);
+    }
+    function stopBookAuto() {
+      clearInterval(bInterval);
+      bInterval = null;
+    }
+
+    bookTrack.addEventListener('mouseenter', stopBookAuto);
+    bookTrack.addEventListener('mouseleave', startBookAuto);
+
+    const bookObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) startBookAuto();
+        else stopBookAuto();
+      });
+    }, { threshold: 0.5 });
+
+    bookObserver.observe(bookCarousel);
+  }
+
   /* ── TEAM LABEL ── */
   const teamLabel = document.getElementById('team-label');
   const teamPaths = document.querySelectorAll('.team-contours path');
