@@ -276,6 +276,51 @@ window.onload = function () {
     bookObserver.observe(bookCarousel);
   }
 
+  /* ── BERLIN CAROUSEL ── */
+  const berlinTrack = document.getElementById('berlin-track');
+  const berlinPrev = document.getElementById('berlin-prev');
+  const berlinNext = document.getElementById('berlin-next');
+  const berlinSlides = berlinTrack ? berlinTrack.querySelectorAll('.carousel-slide') : [];
+  const berlinCarousel = berlinTrack ? berlinTrack.closest('.carousel') : null;
+
+  if (berlinTrack && berlinSlides.length) {
+    let blIdx = 0;
+    let blInterval;
+
+    function berlinGoTo(i) {
+      blIdx = i;
+      if (blIdx < 0) blIdx = berlinSlides.length - 1;
+      if (blIdx >= berlinSlides.length) blIdx = 0;
+      berlinTrack.style.transform = 'translateX(-' + (blIdx * 100) + '%)';
+    }
+
+    function berlinNextSlide() { berlinGoTo(blIdx + 1); }
+    function berlinPrevSlide() { berlinGoTo(blIdx - 1); }
+
+    berlinNext.addEventListener('click', berlinNextSlide);
+    berlinPrev.addEventListener('click', berlinPrevSlide);
+
+    function startBerlinAuto() {
+      if (!blInterval) blInterval = setInterval(berlinNextSlide, 4000);
+    }
+    function stopBerlinAuto() {
+      clearInterval(blInterval);
+      blInterval = null;
+    }
+
+    berlinTrack.addEventListener('mouseenter', stopBerlinAuto);
+    berlinTrack.addEventListener('mouseleave', startBerlinAuto);
+
+    const berlinObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) startBerlinAuto();
+        else stopBerlinAuto();
+      });
+    }, { threshold: 0.5 });
+
+    berlinObserver.observe(berlinCarousel);
+  }
+
   /* ── TEAM LABEL ── */
   const teamLabel = document.getElementById('team-label');
   const teamPaths = document.querySelectorAll('.team-contours path');
