@@ -86,6 +86,24 @@ window.onload = function () {
     });
   }
 
+  /* ── CAROUSEL SLIDE LAZY LOAD ── */
+  function ensureCarouselImg(slide) {
+    const img = slide.querySelector('img');
+    if (img && img.dataset.src && !img.src) {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    }
+  }
+
+  function preloadAround(track, i) {
+    const slides = track.querySelectorAll('.carousel-slide');
+    const n = slides.length;
+    if (!n) return;
+    [-1, 0, 1].forEach(off => {
+      ensureCarouselImg(slides[((i + off) % n + n) % n]);
+    });
+  }
+
   /* ── CAROUSEL ── */
   const track = document.getElementById('carousel-track');
   const prevBtn = document.getElementById('carousel-prev');
@@ -102,6 +120,7 @@ window.onload = function () {
       if (index < 0) index = slides.length - 1;
       if (index >= slides.length) index = 0;
       track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      preloadAround(track, index);
     }
 
     function next() { goTo(index + 1); }
@@ -150,6 +169,7 @@ window.onload = function () {
       if (idx < 0) idx = aboutSlides.length - 1;
       if (idx >= aboutSlides.length) idx = 0;
       aboutTrack.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      preloadAround(aboutTrack, idx);
       if (idx === 1) {
         const gif = aboutSlides[1].querySelector('img');
         if (gif) gif.src = gif.src;
@@ -202,6 +222,7 @@ window.onload = function () {
       if (sIdx < 0) sIdx = snacksSlides.length - 1;
       if (sIdx >= snacksSlides.length) sIdx = 0;
       snacksTrack.style.transform = 'translateX(-' + (sIdx * 100) + '%)';
+      preloadAround(snacksTrack, sIdx);
     }
 
     function snacksNextSlide() { snacksGoTo(sIdx + 1); }
@@ -247,6 +268,7 @@ window.onload = function () {
       if (bIdx < 0) bIdx = bookSlides.length - 1;
       if (bIdx >= bookSlides.length) bIdx = 0;
       bookTrack.style.transform = 'translateX(-' + (bIdx * 100) + '%)';
+      preloadAround(bookTrack, bIdx);
     }
 
     function bookNextSlide() { bookGoTo(bIdx + 1); }
@@ -292,6 +314,7 @@ window.onload = function () {
       if (blIdx < 0) blIdx = berlinSlides.length - 1;
       if (blIdx >= berlinSlides.length) blIdx = 0;
       berlinTrack.style.transform = 'translateX(-' + (blIdx * 100) + '%)';
+      preloadAround(berlinTrack, blIdx);
     }
 
     function berlinNextSlide() { berlinGoTo(blIdx + 1); }
@@ -319,6 +342,22 @@ window.onload = function () {
     }, { threshold: 0.5 });
 
     berlinObserver.observe(berlinCarousel);
+  }
+
+  /* ── OPEN CALL VIDEO ── */
+  const openCallVideo = document.querySelector('.open-call-video');
+  if (openCallVideo) {
+    const openCallObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          openCallVideo.play().catch(() => {});
+        } else {
+          openCallVideo.pause();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    openCallObserver.observe(openCallVideo);
   }
 
   /* ── TEAM LABEL ── */
