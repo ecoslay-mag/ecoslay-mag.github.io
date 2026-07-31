@@ -697,6 +697,10 @@ h3.apply-heading {
   display: none;
 }
 
+.topbar-row {
+  display: none;
+}
+
 @media (max-width: 700px) {
   .page-section {
     max-width: 95vw;
@@ -727,6 +731,18 @@ h3.apply-heading {
     gap: 0;
     padding: 0 12px;
     height: 52px;
+  }
+
+  .topbar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .topbar-logo {
+    height: 34px;
+    width: auto;
   }
 
   .topbar-link {
