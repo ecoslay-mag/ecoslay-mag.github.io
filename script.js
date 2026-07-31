@@ -81,7 +81,9 @@ window.onload = function () {
   const scrollPrompt = document.getElementById('scroll-prompt');
   if (scrollPrompt) {
     scrollPrompt.addEventListener('click', () => {
-      const target = document.getElementById('scoobydoo-unity');
+      const target = window.matchMedia('(max-width: 600px)').matches
+        ? document.getElementById('about')
+        : document.getElementById('scoobydoo-unity');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }

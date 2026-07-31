@@ -960,10 +960,7 @@ h3.apply-heading {
 }
 
 @media (max-width: 600px) {
-  .scoobydoo-wrapper {
-    flex-shrink: 0;
-    width: 88vh;
-    max-width: none;
-    transform: rotate(90deg);
+  #scoobydoo-unity {
+    display: none;
   }
 }
