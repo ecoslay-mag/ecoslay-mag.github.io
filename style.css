@@ -280,11 +280,16 @@ main {
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
+  align-items: center;
 }
 
 .event-image-row .event-image {
   width: 50%;
   margin-bottom: 0;
+}
+
+.event-image-row .event-image-sm {
+  width: 40%;
 }
 
 .event-video {
