@@ -958,3 +958,12 @@ h3.apply-heading {
     column-gap: 16px;
   }
 }
+
+@media (max-width: 600px) {
+  .scoobydoo-wrapper {
+    flex-shrink: 0;
+    width: 88vh;
+    max-width: none;
+    transform: rotate(90deg);
+  }
+}
