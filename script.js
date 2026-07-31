@@ -82,7 +82,7 @@ window.onload = function () {
   if (scrollPrompt) {
     scrollPrompt.addEventListener('click', () => {
       const target = window.matchMedia('(max-width: 600px)').matches
-        ? document.getElementById('about')
+        ? document.getElementById('magazine')
         : document.getElementById('scoobydoo-unity');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
