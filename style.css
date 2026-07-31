@@ -242,7 +242,7 @@ main {
 }
 
 .event-item.open .event-body {
-  max-height: 1200px;
+  max-height: 3200px;
   padding-bottom: 16px;
   opacity: 1;
 }
@@ -275,6 +275,15 @@ main {
 .event-image-row .event-image {
   width: 50%;
   margin-bottom: 0;
+}
+
+.event-video {
+  width: 80%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border-radius: 12px;
+  background: #e0e0e0;
 }
 
 /* ── CAROUSEL ── */

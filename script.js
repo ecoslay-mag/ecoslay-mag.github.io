@@ -186,6 +186,51 @@ window.onload = function () {
     aboutObserver.observe(aboutCarousel);
   }
 
+  /* ── SNACKS CAROUSEL ── */
+  const snacksTrack = document.getElementById('snacks-track');
+  const snacksPrev = document.getElementById('snacks-prev');
+  const snacksNext = document.getElementById('snacks-next');
+  const snacksSlides = snacksTrack ? snacksTrack.querySelectorAll('.carousel-slide') : [];
+  const snacksCarousel = snacksTrack ? snacksTrack.closest('.carousel') : null;
+
+  if (snacksTrack && snacksSlides.length) {
+    let sIdx = 0;
+    let sInterval;
+
+    function snacksGoTo(i) {
+      sIdx = i;
+      if (sIdx < 0) sIdx = snacksSlides.length - 1;
+      if (sIdx >= snacksSlides.length) sIdx = 0;
+      snacksTrack.style.transform = 'translateX(-' + (sIdx * 100) + '%)';
+    }
+
+    function snacksNextSlide() { snacksGoTo(sIdx + 1); }
+    function snacksPrevSlide() { snacksGoTo(sIdx - 1); }
+
+    snacksNext.addEventListener('click', snacksNextSlide);
+    snacksPrev.addEventListener('click', snacksPrevSlide);
+
+    function startSnacksAuto() {
+      if (!sInterval) sInterval = setInterval(snacksNextSlide, 4000);
+    }
+    function stopSnacksAuto() {
+      clearInterval(sInterval);
+      sInterval = null;
+    }
+
+    snacksTrack.addEventListener('mouseenter', stopSnacksAuto);
+    snacksTrack.addEventListener('mouseleave', startSnacksAuto);
+
+    const snacksObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) startSnacksAuto();
+        else stopSnacksAuto();
+      });
+    }, { threshold: 0.5 });
+
+    snacksObserver.observe(snacksCarousel);
+  }
+
   /* ── TEAM LABEL ── */
   const teamLabel = document.getElementById('team-label');
   const teamPaths = document.querySelectorAll('.team-contours path');
