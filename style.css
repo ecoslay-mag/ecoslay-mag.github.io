@@ -782,16 +782,12 @@ h3.apply-heading {
   body {
     background: none;
     background-color: var(--pink);
-    position: relative;
   }
 
   body::before {
     content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 120vh;
+    position: fixed;
+    inset: 0;
     z-index: -1;
     background-image: url('background19x6.jpg');
     background-size: cover;
