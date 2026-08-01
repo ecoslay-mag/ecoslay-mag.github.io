@@ -787,7 +787,7 @@ h3.apply-heading {
   body::before {
     content: '';
     position: fixed;
-    inset: 0;
+    inset: 0 0 -20vh 0;
     z-index: -1;
     background-image: url('background19x6.jpg');
     background-size: cover;
