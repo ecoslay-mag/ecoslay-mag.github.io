@@ -976,4 +976,8 @@ h3.apply-heading {
   #scroll-prompt {
     bottom: 24px;
   }
+
+  #about {
+    margin-top: 20vh;
+  }
 }
