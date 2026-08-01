@@ -782,13 +782,27 @@ h3.apply-heading {
   body {
     background: none;
     background-color: var(--pink);
+    position: relative;
   }
 
   body::before {
     content: '';
     position: fixed;
-    inset: 0 0 -20vh 0;
+    inset: 0;
     z-index: -1;
+    background-image: url('background19x6.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    z-index: -2;
     background-image: url('background19x6.jpg');
     background-size: cover;
     background-position: center;
