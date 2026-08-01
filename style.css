@@ -967,6 +967,11 @@ h3.apply-heading {
   .stage {
     min-height: calc(100vh - 92px);
     min-height: calc(100svh - 92px);
+    min-height: calc(100dvh - 92px);
+  }
+
+  main {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
   }
 
   #logo-svg {
