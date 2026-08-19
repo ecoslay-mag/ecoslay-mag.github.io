@@ -16,16 +16,23 @@
 }
 
 body {
-  background-color: var(--pink);
-  background-image: url('background.webp');
-  background-size: 120%;
-  background-position: center;
-  background-attachment: fixed;
+  background: none;
   min-height: 100vh;
   font-family: 'Montserrat', sans-serif;
   font-weight: 550;
   font-size: clamp(15px, 14px + 0.3vw, 18px);
   overflow-x: hidden;
+  }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--pink);
+  background-image: url('background.webp');
+  background-size: cover;
+  background-position: center;
   }
 
 /* ── MAIN ── */
@@ -777,21 +784,6 @@ h3.apply-heading {
     font-family: 'Bebas Neue', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-  }
-
-  body {
-    background: none;
-    background-color: var(--pink);
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image: url('background19x6.jpg');
-    background-size: cover;
-    background-position: center;
   }
 }
 
