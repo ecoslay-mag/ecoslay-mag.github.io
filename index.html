@@ -10,6 +10,9 @@
 </head>
 <body>
 
+<div id="bg-current"></div>
+<div id="bg-next"></div>
+
 <nav id="topbar">
   <div class="topbar-row">
     <img src="images/ECOSLAY_logo2.webp" alt="ECOSLAY" class="topbar-logo">
@@ -67,53 +70,7 @@
       </div>
     </div>
 
-    <section id="scoobydoo-unity">
-      <div class="scoobydoo-wrapper">
-        <img src="images/scoobydoo-intro/scooby-before.webp" alt="" class="scooby-bg" id="scooby-before">
-        <img src="images/scoobydoo-intro/scooby-trash.webp" alt="" class="scooby-bg" id="scooby-after" style="opacity: 0">
-        <img src="images/scoobydoo-intro/scooby-cc.webp" alt="" class="scooby-bg" id="scooby-cc" style="opacity: 0">
-        <img src="images/scoobydoo-intro/scooby-worm.webp" alt="" class="scooby-bg" id="scooby-worm" style="opacity: 0">
-        <img src="images/scoobydoo-intro/scooby-ecoslay.webp" alt="" class="scooby-bg" id="scooby-ecoslay" style="opacity: 0">
-
-        <div class="strokes">
-          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="#ff40a3" stroke-linecap="round">
-              <path class="stroke" d="M -251 -42 C 156 -405 595 -695 1176 -648" stroke-width="150"/>
-              <path class="stroke" d="M -195 90 C 212 -273 651 -562 1232 -516" stroke-width="150"/>
-              <path class="stroke" d="M -138 223 C 269 -140 707 -430 1288 -383" stroke-width="150"/>
-              <path class="stroke" d="M -82 355 C 325 -8 764 -297 1345 -250" stroke-width="150"/>
-              <path class="stroke" d="M -26 488 C 381 125 820 -165 1401 -118" stroke-width="150"/>
-              <path class="stroke" d="M 30 620 C 438 257 876 -32 1457 15" stroke-width="150"/>
-              <path class="stroke" d="M 87 753 C 494 390 932 101 1513 147" stroke-width="150"/>
-              <path class="stroke" d="M 143 885 C 550 522 989 233 1570 280" stroke-width="150"/>
-              <path class="stroke" d="M 199 1018 C 606 655 1045 366 1626 412" stroke-width="150"/>
-              <path class="stroke" d="M 255 1150 C 663 788 1101 498 1682 545" stroke-width="150"/>
-              <path class="stroke" d="M 312 1283 C 719 920 1157 631 1738 677" stroke-width="150"/>
-              <path class="stroke" d="M 368 1416 C 775 1053 1214 763 1795 810" stroke-width="150"/>
-              <path class="stroke" d="M 424 1548 C 831 1185 1270 896 1851 942" stroke-width="150"/>
-            </g>
-          </svg>
-        </div>
-
-        <svg class="sparkles" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#fff" stroke="#141414" stroke-width="4" stroke-linejoin="round">
-            <g transform="translate(360 230) scale(1.5)">
-              <path class="sparkle" vector-effect="non-scaling-stroke" d="M 0 -55 C 8 -16 16 -8 55 0 C 16 8 8 16 0 55 C -8 16 -16 8 -55 0 C -16 -8 -8 -16 0 -55 Z"/>
-            </g>
-            <g transform="translate(1180 520) scale(1)">
-              <path class="sparkle" vector-effect="non-scaling-stroke" d="M 0 -55 C 8 -16 16 -8 55 0 C 16 8 8 16 0 55 C -8 16 -16 8 -55 0 C -16 -8 -8 -16 0 -55 Z"/>
-            </g>
-            <g transform="translate(640 730) scale(0.65)">
-              <path class="sparkle" vector-effect="non-scaling-stroke" d="M 0 -55 C 8 -16 16 -8 55 0 C 16 8 8 16 0 55 C -8 16 -16 8 -55 0 C -16 -8 -8 -16 0 -55 Z"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      <div id="scooby-scroll-prompt">
-        <span id="scooby-scroll-arrow">↓</span>
-      </div>
-    </section>
+    <div class="bg-transition-spacer" data-to="about" style="margin-top: 150px;"></div>
 
     <section id="about" class="page-section">
       <h2 class="section-heading">What is Ecoslay About</h2>
@@ -147,6 +104,8 @@
         <li>Articulate dry scientific facts or alternative forms of knowledge like traditional ancient wisdom in more engaging forms.</li>
       </ul>
     </section>
+
+    <div class="bg-transition-spacer" data-to="magazine"></div>
 
     <section id="magazine" class="page-section">
       <h2 class="section-heading">Magazine</h2>
@@ -212,6 +171,8 @@
       </div>
     </section>
 
+    <div class="bg-transition-spacer" data-to="open-call"></div>
+
     <section id="open-call" class="page-section">
       <h2 class="section-heading">Open Call</h2>
 
@@ -259,6 +220,8 @@
 
 
     </section>
+
+    <div class="bg-transition-spacer" data-to="events"></div>
 
     <section id="events" class="page-section">
       <h2 class="section-heading">Events</h2>
@@ -387,6 +350,8 @@
       </div>
     </section>
 
+    <div class="bg-transition-spacer" data-to="team"></div>
+
     <section id="team" class="page-section">
       <h2 class="section-heading">Team</h2>
       <div class="team-container">
@@ -457,10 +422,14 @@
       </div>
     </section>
 
+    <div class="bg-transition-spacer" data-to="contact"></div>
+
     <section id="contact" class="page-section">
       <h2 class="section-heading">Contact</h2>
       <p>For general inquiries or collaboration proposals, reach out to <a href="mailto:ecoslay@protonmail.com">ecoslay@protonmail.com</a>. Follow us on <a href="https://www.instagram.com/ecoslay_mag/" target="_blank">Instagram</a> for regular updates and fun content!</p>
     </section>
+
+    <div class="bg-transition-spacer" data-to="partners"></div>
 
     <section id="partners" class="page-section">
       <h2 class="section-heading">Partners</h2>
@@ -475,6 +444,8 @@
         <img src="images/logo_partners/logo-7.webp" alt="Partner logo" loading="lazy">
       </div>
     </section>
+
+    <div class="bg-transition-spacer" data-to="impressum"></div>
 
     <section id="impressum" class="page-section impressum-section">
       <h2 class="section-heading">Impressum</h2>
@@ -492,6 +463,8 @@
 
   </main>
 
+
+  <img id="ghost" src="images/pop-culture-ghost.webp" alt="" aria-hidden="true">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="script.js"></script>
