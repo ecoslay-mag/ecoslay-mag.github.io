@@ -720,6 +720,10 @@ window.onload = function () {
     }
 
     function update() {
+      // Recalculate each frame — lazy images shift layout after initial load
+      updateSpacerBounds();
+      updateTransitionPositions();
+
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
 
