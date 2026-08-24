@@ -447,9 +447,9 @@ window.onload = function () {
     const unmaskedImg = document.getElementById('unmasked');
     let ghostUnmasked = false;
 
-    // Canvas internal resolution — square so particles expand equally in all directions
-    const CANVAS_W = 320;
-    const CANVAS_H = 320;
+    // Canvas internal resolution — 2x larger square so particles expand equally in all directions
+    const CANVAS_W = 400;
+    const CANVAS_H = 400;
     smokeCanvas.width = CANVAS_W;
     smokeCanvas.height = CANVAS_H;
     const ctx = smokeCanvas.getContext('2d');
