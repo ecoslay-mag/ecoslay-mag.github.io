@@ -852,9 +852,30 @@ h3.apply-heading {
   width: 15vw;
   min-width: 100px;
   height: auto;
-  pointer-events: none;
   z-index: 50;
   will-change: transform;
+  cursor: pointer;
+}
+
+#smoke {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 51;
+}
+
+#unmasked {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 15vw;
+  min-width: 100px;
+  height: auto;
+  pointer-events: none;
+  z-index: 50;
+  will-change: opacity, transform;
+  transition: opacity 0.3s ease;
 }
 
 /* ── SECTION BACKGROUNDS ── */

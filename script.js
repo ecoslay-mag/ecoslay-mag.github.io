@@ -441,6 +441,217 @@ window.onload = function () {
         }, 200);
       });
     }
+
+    /* ── GHOST UNMASK SMOKE TRANSITION (exact from mockup) ── */
+    const smokeCanvas = document.getElementById('smoke');
+    const unmaskedImg = document.getElementById('unmasked');
+    let ghostUnmasked = false;
+
+    // Canvas internal resolution — square so particles expand equally in all directions
+    const CANVAS_W = 320;
+    const CANVAS_H = 320;
+    smokeCanvas.width = CANVAS_W;
+    smokeCanvas.height = CANVAS_H;
+    const ctx = smokeCanvas.getContext('2d');
+    // Ghost display is ~1.91:1, canvas is 1:1 → scale Y by 1/1.91 to compensate browser stretch
+    const DRAW_SCALE_Y = 1 / 1.91;
+
+    // Pre-render puff textures — 1.5x larger for 50% bigger coverage
+    const puffSizes = [15, 24, 33, 45, 60, 83];
+    const variantsPerSize = 3;
+    const puffTextures = puffSizes.map(r =>
+      Array.from({ length: variantsPerSize }, () => makePuffTexture(r))
+    );
+
+    function makePuffTexture(radius) {
+      const size = radius * 3;
+      const c = radius * 1.5;
+      const off = document.createElement('canvas');
+      off.width = size;
+      off.height = size;
+      const octx = off.getContext('2d');
+
+      function lobe(ox, oy, r, coreAlpha) {
+        const grad = octx.createRadialGradient(c + ox, c + oy, 0, c + ox, c + oy, r);
+        grad.addColorStop(0, `rgba(255,255,255,${coreAlpha})`);
+        grad.addColorStop(0.35, `rgba(255,255,255,${coreAlpha * 0.7})`);
+        grad.addColorStop(0.7, `rgba(255,255,255,${coreAlpha * 0.25})`);
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        octx.fillStyle = grad;
+        octx.beginPath();
+        octx.arc(c + ox, c + oy, r, 0, Math.PI * 2);
+        octx.fill();
+      }
+
+      // EXACT from mockup: central 0.7, offset 0.45-0.75
+      lobe(0, 0, radius, 0.7);
+      const lobeCount = 3 + Math.floor(Math.random() * 4);
+      for (let i = 0; i < lobeCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = radius * (0.35 + Math.random() * 0.55);
+        const lr = radius * (0.35 + Math.random() * 0.55);
+        lobe(Math.cos(angle) * dist, Math.sin(angle) * dist, lr, 0.45 + Math.random() * 0.3);
+      }
+      return off;
+    }
+
+    function spawnParticle(cx, cy, opts) {
+      const angle = Math.random() * Math.PI * 2;
+      const isCore = opts.core;
+      const speed = isCore
+        ? Math.random() * 0.4 + 0.05
+        : Math.random() * 1.8 + 0.6;
+      const sizeIndex = isCore
+        ? puffSizes.length - 1 - Math.floor(Math.random() * 2)
+        : Math.floor(Math.random() * puffSizes.length);
+      const variant = puffTextures[sizeIndex][Math.floor(Math.random() * variantsPerSize)];
+
+      return {
+        x: cx + (Math.random() - 0.5) * (isCore ? 20 : 160),
+        y: cy + (Math.random() - 0.5) * (isCore ? 20 : 160),
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - (isCore ? 0.1 : 0.3),
+        size: puffSizes[sizeIndex],
+        tex: variant,
+        life: 0,
+        maxLife: isCore ? (70 + Math.random() * 30) : (50 + Math.random() * 40),
+        growth: isCore ? (1.012 + Math.random() * 0.008) : (1.005 + Math.random() * 0.008),
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.02,
+        scaleX: 0.75 + Math.random() * 0.6,
+        scaleY: 0.75 + Math.random() * 0.6,
+        turbPhase: Math.random() * Math.PI * 2,
+        turbSpeed: 0.03 + Math.random() * 0.05,
+        turbStrength: isCore ? 0.05 : 0.2,
+        delay: isCore ? Math.random() * 6 : Math.random() * 18,
+      };
+    }
+
+    let particles = [];
+    let animating = false;
+    let frame = 0;
+    const totalFrames = 130;
+
+    function tick() {
+      frame++;
+      ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+      let anyAlive = false;
+
+      for (const p of particles) {
+        if (frame < p.delay) { anyAlive = true; continue; }
+
+        p.life++;
+        if (p.life > p.maxLife) continue;
+        anyAlive = true;
+
+        p.turbPhase += p.turbSpeed;
+        p.vx += Math.cos(p.turbPhase) * p.turbStrength * 0.1;
+        p.vy += Math.sin(p.turbPhase * 1.3) * p.turbStrength * 0.1;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.size *= p.growth;
+        p.rotation += p.rotSpeed;
+
+        const lifeRatio = p.life / p.maxLife;
+        let alpha;
+        if (lifeRatio < 0.15) alpha = lifeRatio / 0.15;
+        else if (lifeRatio < 0.6) alpha = 1;
+        else alpha = 1 - (lifeRatio - 0.6) / 0.4;
+
+        const drawSize = p.size * 3;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.scale(p.scaleX, p.scaleY * DRAW_SCALE_Y);
+        ctx.drawImage(p.tex, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+        ctx.restore();
+      }
+
+// Soft edge fade — elliptical gradient with simple turbulence
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.save();
+      // Scale Y to create ellipse matching ghost aspect (~1.91:1)
+      ctx.translate(CANVAS_W/2, CANVAS_H/2);
+      ctx.scale(1, 1.91);
+      // Simple turbulence: modulate radius with sine waves based on frame
+      const baseRadius = CANVAS_W/2 * 1.05;
+      const turb1 = Math.sin(frame * 0.08) * 8;
+      const turb2 = Math.sin(frame * 0.13 * 1.7) * 5;
+      const turb3 = Math.sin(frame * 0.05 * 2.3) * 3;
+      const radius = baseRadius + turb1 + turb2 + turb3;
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+      grad.addColorStop(0, 'rgba(0,0,0,1)');
+      grad.addColorStop(0.65, 'rgba(0,0,0,1)');
+      grad.addColorStop(0.85, 'rgba(0,0,0,0.3)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(-CANVAS_W/2, -CANVAS_H/2, CANVAS_W, CANVAS_H);
+      ctx.restore();
+      ctx.globalCompositeOperation = 'source-over';
+
+      if (frame < totalFrames && anyAlive) {
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+        animating = false;
+        // Swap ghost → unmasked
+        ghost.style.opacity = '0';
+        unmaskedImg.style.opacity = '1';
+        // Fade out unmasked after delay
+        setTimeout(() => {
+          unmaskedImg.style.opacity = '0';
+          // Clean up after fade
+          setTimeout(() => {
+            ghost.remove();
+            smokeCanvas.remove();
+            unmaskedImg.remove();
+          }, 1000);
+        }, 4000);
+      }
+    }
+
+    function triggerUnmask() {
+      if (ghostUnmasked || animating) return;
+      ghostUnmasked = true;
+
+      // Stop ghost drift
+      if (ghostTl) ghostTl.kill();
+      ghost.style.pointerEvents = 'none';
+
+      // Position canvas and unmasked at ghost's current screen position
+      const rect = ghost.getBoundingClientRect();
+      smokeCanvas.style.width = rect.width + 'px';
+      smokeCanvas.style.height = rect.height + 'px';
+      smokeCanvas.style.left = rect.left + 'px';
+      smokeCanvas.style.top = rect.top + 'px';
+      smokeCanvas.style.transform = 'none';
+
+      unmaskedImg.style.width = rect.width + 'px';
+      unmaskedImg.style.height = rect.height + 'px';
+      unmaskedImg.style.left = rect.left + 'px';
+      unmaskedImg.style.top = rect.top + 'px';
+      unmaskedImg.style.transform = 'none';
+
+      // Spawn particles at center of canvas — increased counts for full coverage
+      const cx = CANVAS_W / 2;
+      const cy = CANVAS_H / 2;
+      particles = [];
+      for (let i = 0; i < 80; i++) particles.push(spawnParticle(cx, cy, { core: true }));
+      for (let i = 0; i < 140; i++) particles.push(spawnParticle(cx, cy, { core: false }));
+
+      frame = 0;
+      animating = true;
+      requestAnimationFrame(tick);
+    }
+
+    ghost.addEventListener('click', triggerUnmask);
+    ghost.addEventListener('touchstart', triggerUnmask, { passive: true });
   }
 
   /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */
