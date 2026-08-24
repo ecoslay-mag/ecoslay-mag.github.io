@@ -81,7 +81,9 @@ window.onload = function () {
   const scrollPrompt = document.getElementById('scroll-prompt');
   if (scrollPrompt) {
     scrollPrompt.addEventListener('click', () => {
-      const target = document.getElementById('about');
+      const target = window.matchMedia('(max-width: 600px)').matches
+        ? document.getElementById('about')
+        : document.getElementById('scoobydoo-unity');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }
@@ -402,157 +404,131 @@ window.onload = function () {
     });
   });
 
-  /* ── GHOST BOTTOM DRIFT ── */
-  const ghost = document.getElementById('ghost');
-  if (ghost && window.gsap) {
-    const SPEED = 120;
-    let ghostTl;
-    let ghostStarted = false;
-    let ghostResize;
+  /* ── UNIFIED NOODLE CRAWL ── */
+  const unitySection = document.getElementById('scoobydoo-unity');
+  if (unitySection) {
+    const STROKE_STAGGER = 0.06;
+    const STROKE_DRAW_TIME = 2.0;
+    const OUTLINE_WIDTH = 7;
+    const STROKE_DRAW_ORDER = [0, 12, 2, 10, 4, 8, 6, 1, 3, 5, 7, 9, 11];
 
-    function placeGhost() {
-      gsap.set(ghost, { x: 0, y: window.innerHeight - ghost.offsetHeight });
-    }
-
-    function ghostLoop() {
-      if (ghostTl) ghostTl.kill();
-      placeGhost();
-      const maxX = Math.max(window.innerWidth - ghost.offsetWidth, 0);
-      ghostTl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' } });
-      ghostTl
-        .to(ghost, { x: maxX, duration: maxX / SPEED })
-        .to(ghost, { x: 0, duration: maxX / SPEED });
-    }
-
-    placeGhost();
-
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      intro.eventCallback('onComplete', () => {
-        if (ghostStarted) return;
-        ghostStarted = true;
-        ghostLoop();
+    const strokes = Array.from(document.querySelectorAll('.stroke')).map(fill => {
+      const fillWidth = parseFloat(fill.getAttribute('stroke-width'));
+      const outline = fill.cloneNode(true);
+      outline.setAttribute('stroke', '#141414');
+      fill.setAttribute('stroke-width', fillWidth - OUTLINE_WIDTH);
+      fill.before(outline);
+      const length = fill.getTotalLength();
+      const layers = [outline, fill];
+      layers.forEach(layer => {
+        layer.style.strokeDasharray = length;
+        layer.style.strokeDashoffset = length;
       });
-
-      window.addEventListener('resize', () => {
-        clearTimeout(ghostResize);
-        ghostResize = setTimeout(() => {
-          if (ghostStarted) ghostLoop();
-          else placeGhost();
-        }, 200);
-      });
-    }
-  }
-
-  /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */
-  const bgCurrent = document.getElementById('bg-current');
-  const bgNext = document.getElementById('bg-next');
-  const sections = [
-    { id: 'about',     bg: 'images/pages/anthology-103.webp' },
-    { id: 'magazine',  bg: 'images/pages/anthology-23.webp' },
-    { id: 'open-call', bg: 'images/pages/anthology-53.webp' },
-    { id: 'events',    bg: 'images/pages/anthology-71.webp' },
-    { id: 'team',      bg: 'images/pages/anthology-93.webp' },
-    { id: 'contact',   bg: 'images/pages/anthology-08.webp' },
-    { id: 'partners',  bg: 'images/pages/anthology-08.webp' },
-    { id: 'impressum', bg: 'images/pages/anthology-08.webp' }
-  ];
-
-  if (bgCurrent && bgNext && sections.length) {
-    const sectionEls = sections.map(s => ({ ...s, el: document.getElementById(s.id) })).filter(s => s.el);
-    const spacers = Array.from(document.querySelectorAll('.bg-transition-spacer'));
-
-    // Map spacer data-to to target section and its bg
-    const bgMap = Object.fromEntries(sections.map(s => [s.id, s.bg]));
-    // Add pink (none) for hero
-    bgMap.hero = null;
-
-    const transitions = spacers.map(spacer => {
-      const targetId = spacer.dataset.to;
-      const fromId = sectionEls.find(s => {
-        const idx = sectionEls.findIndex(se => se.id === targetId);
-        return idx > 0 ? sectionEls[idx - 1].id : 'hero';
-      })?.id || 'hero';
-      return {
-        el: spacer,
-        fromBg: bgMap[fromId],
-        toBg: bgMap[targetId],
-        targetId,
-        top: 0,
-        bottom: 0,
-        height: 0
-      };
+      return { layers, length };
     });
 
-    // Preload all backgrounds
-    sections.forEach(s => { new Image().src = s.bg; });
+    const sparkles = gsap.utils.toArray('.sparkle');
+    const beforeImg = document.getElementById('scooby-before');
+    const afterImg = document.getElementById('scooby-after');
+    const ccImg = document.getElementById('scooby-cc');
+    const wormImg = document.getElementById('scooby-worm');
+    const ecoslayImg = document.getElementById('scooby-ecoslay');
 
-    let bgTick = false;
+    const startTime = (order) => order * STROKE_STAGGER;
+    const timingWobble = (order) => (order % 2 === 0 ? 0 : STROKE_STAGGER * 0.6);
+    const drawDuration = (order) => STROKE_DRAW_TIME + (order % 3) * 0.12;
 
-    function updateSpacerBounds() {
-      transitions.forEach(t => {
-        const rect = t.el.getBoundingClientRect();
-        t.top = rect.top + window.scrollY;
-        t.bottom = rect.bottom + window.scrollY;
-        t.height = rect.height;
+    const drawSteps = STROKE_DRAW_ORDER.map((strokeIndex, order) => ({
+      strokeIndex,
+      at: startTime(order) + timingWobble(order),
+      duration: drawDuration(order),
+    }));
+    const coveredAt = Math.max(...drawSteps.map(step => step.at + step.duration));
+
+    const CYCLE_GAP = 6;
+
+    function addCycle(tl, offset, hideImg, showImg, reverse) {
+      tl.call(() => {
+        strokes.forEach(({ layers, length }) => {
+          const val = reverse ? -length : length;
+          layers.forEach(layer => layer.style.strokeDashoffset = val);
+        });
+      }, [], offset);
+
+      drawSteps.forEach(({ strokeIndex, at, duration }) => {
+        tl.to(
+          strokes[strokeIndex].layers,
+          { strokeDashoffset: 0, duration, ease: 'power2.out' },
+          offset + at,
+        );
+      });
+
+      tl.set(showImg, { opacity: 1 }, offset + coveredAt - 0.15);
+      tl.set(hideImg, { opacity: 0 }, offset + coveredAt - 0.15);
+
+      [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
+        const { layers, length } = strokes[strokeIndex];
+        tl.to(
+          layers,
+          { strokeDashoffset: reverse ? length : -length, duration: drawDuration(order), ease: 'power2.in' },
+          offset + coveredAt + startTime(order) + timingWobble(order),
+        );
+      });
+
+      sparkles.forEach((sparkle, index) => {
+        const popAt = offset + coveredAt - 0.4 + index * 0.25;
+        tl
+          .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
+            { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
+          .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
       });
     }
 
-    function update() {
-      const scrollY = window.scrollY;
+    let started = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !started) {
+          started = true;
+          observer.disconnect();
 
-      // Find active transition (spacer containing scrollY)
-      let activeTransition = null;
-      for (const t of transitions) {
-        if (scrollY >= t.top && scrollY <= t.bottom) {
-          activeTransition = t;
-          break;
-        }
-      }
+          const timeline = gsap.timeline({ delay: 2 });
 
-      if (activeTransition) {
-        // Transition happens over first 15vh of spacer, then content enters from bottom during remaining 100vh
-        const transitionHeight = 15 * window.innerHeight / 100;
-        const progress = Math.min(1, Math.max(0, (scrollY - activeTransition.top) / transitionHeight));
-        bgNext.style.backgroundImage = `url("${activeTransition.toBg}")`;
-        bgNext.style.setProperty('--reveal', `${progress * 100}%`);
+          addCycle(timeline, 0, beforeImg, afterImg);
+          const c2 = coveredAt + CYCLE_GAP;
+          addCycle(timeline, c2, afterImg, ccImg);
+          const c3 = c2 + coveredAt + CYCLE_GAP;
+          addCycle(timeline, c3, ccImg, wormImg);
+          const c4 = c3 + coveredAt + CYCLE_GAP;
 
-        // If transition complete, commit to bgCurrent
-        if (progress >= 1) {
-          bgCurrent.style.backgroundImage = `url("${activeTransition.toBg}")`;
-          bgNext.style.setProperty('--reveal', '0%');
-        }
-      } else {
-        // Not in a transition spacer - find last completed transition
-        let lastCompleted = null;
-        for (const t of transitions) {
-          if (scrollY > t.bottom) {
-            lastCompleted = t;
+          timeline.call(() => {
+            strokes.forEach(({ layers }) => {
+              layers[1].style.stroke = '#ffb3c6';
+            });
+          }, [], c4);
+
+          addCycle(timeline, c4, wormImg, ecoslayImg, true);
+
+          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 0 }, c4 + coveredAt + 3);
+
+          timeline.call(() => {
+            const p = document.getElementById('scooby-scroll-prompt');
+            if (p) {
+              p.style.opacity = 1;
+              p.style.pointerEvents = 'auto';
+            }
+          }, [], c4 + coveredAt + 3.5);
+
+          const scrollPrompt = document.getElementById('scooby-scroll-prompt');
+          if (scrollPrompt) {
+            scrollPrompt.addEventListener('click', () => {
+              const target = document.getElementById('about');
+              if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
           }
         }
-        if (lastCompleted) {
-          bgCurrent.style.backgroundImage = `url("${lastCompleted.toBg}")`;
-        } else {
-          // Before first transition - hero, show pink (no bg on bgCurrent)
-          bgCurrent.style.backgroundImage = 'none';
-        }
-        bgNext.style.setProperty('--reveal', '0%');
-      }
+      });
+    }, { threshold: 0.5 });
 
-      // No opacity toggling - content always visible, naturally enters from bottom
-    }
-
-    function requestUpdate() {
-      if (bgTick) return;
-      bgTick = true;
-      requestAnimationFrame(() => { update(); bgTick = false; });
-    }
-
-    updateSpacerBounds();
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', () => {
-      updateSpacerBounds();
-      requestUpdate();
-    });
+    observer.observe(unitySection);
   }
 };
