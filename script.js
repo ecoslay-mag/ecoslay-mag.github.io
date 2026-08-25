@@ -530,8 +530,8 @@ window.onload = function () {
       const angle = Math.random() * Math.PI * 2;
       const isCore = opts.core;
       const speed = isCore
-        ? Math.random() * 0.4 + 0.05
-        : Math.random() * 1.8 + 0.6;
+        ? (Math.random() * 0.4 + 0.05) * 2
+        : (Math.random() * 1.8 + 0.6) * 2;
       const sizeIndex = isCore
         ? puffSizes.length - 1 - Math.floor(Math.random() * 2)
         : Math.floor(Math.random() * puffSizes.length);
@@ -541,27 +541,27 @@ window.onload = function () {
         x: cx + (Math.random() - 0.5) * (isCore ? 20 : 160),
         y: cy + (Math.random() - 0.5) * (isCore ? 20 : 160),
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - (isCore ? 0.1 : 0.3),
+        vy: Math.sin(angle) * speed - (isCore ? 0.2 : 0.6),
         size: puffSizes[sizeIndex],
         tex: variant,
         life: 0,
-        maxLife: isCore ? (70 + Math.random() * 30) : (50 + Math.random() * 40),
-        growth: isCore ? (1.012 + Math.random() * 0.008) : (1.005 + Math.random() * 0.008),
+        maxLife: isCore ? (35 + Math.random() * 15) : (25 + Math.random() * 20),
+        growth: isCore ? (1.024 + Math.random() * 0.016) : (1.01 + Math.random() * 0.016),
         rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.02,
+        rotSpeed: (Math.random() - 0.5) * 0.04,
         scaleX: 0.75 + Math.random() * 0.6,
         scaleY: 0.75 + Math.random() * 0.6,
         turbPhase: Math.random() * Math.PI * 2,
-        turbSpeed: 0.03 + Math.random() * 0.05,
+        turbSpeed: (0.03 + Math.random() * 0.05) * 2,
         turbStrength: isCore ? 0.05 : 0.2,
-        delay: isCore ? Math.random() * 6 : Math.random() * 18,
+        delay: isCore ? Math.random() * 3 : Math.random() * 9,
       };
     }
 
     let particles = [];
     let animating = false;
     let frame = 0;
-    const totalFrames = 130;
+    const totalFrames = 65;
 
     function tick() {
       frame++;
@@ -610,11 +610,11 @@ window.onload = function () {
       // Scale Y to create ellipse matching ghost aspect (~1.91:1)
       ctx.translate(CANVAS_W/2, CANVAS_H/2);
       ctx.scale(1, 1.91);
-      // Simple turbulence: modulate radius with sine waves based on frame
+      // Simple turbulence: modulate radius with sine waves based on frame (2x speed)
       const baseRadius = CANVAS_W/2 * 1.05;
-      const turb1 = Math.sin(frame * 0.08) * 8;
-      const turb2 = Math.sin(frame * 0.13 * 1.7) * 5;
-      const turb3 = Math.sin(frame * 0.05 * 2.3) * 3;
+      const turb1 = Math.sin(frame * 0.16) * 8;
+      const turb2 = Math.sin(frame * 0.26 * 1.7) * 5;
+      const turb3 = Math.sin(frame * 0.10 * 2.3) * 3;
       const radius = baseRadius + turb1 + turb2 + turb3;
       const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
       grad.addColorStop(0, 'rgba(0,0,0,1)');
