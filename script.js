@@ -404,11 +404,21 @@ window.onload = function () {
 
   /* ── GHOST BOTTOM DRIFT ── */
   const ghost = document.getElementById('ghost');
+  const ghostLabel = document.getElementById('ghost-label');
   if (ghost && window.gsap) {
     const SPEED = 120;
     let ghostTl;
     let ghostStarted = false;
     let ghostResize;
+    let ghostUnmasked = false;
+
+    function syncGhostLabel() {
+      if (!ghostLabel || ghostUnmasked) return;
+      const r = ghost.getBoundingClientRect();
+      ghostLabel.style.left = (r.left + r.width / 2) + 'px';
+      ghostLabel.style.top = (r.top - ghostLabel.offsetHeight - 6) + 'px';
+      ghostLabel.style.transform = 'translateX(-50%)';
+    }
 
     function placeGhost() {
       gsap.set(ghost, { x: 0, y: window.innerHeight - ghost.offsetHeight });
@@ -425,12 +435,27 @@ window.onload = function () {
     }
 
     placeGhost();
+    ghost.style.pointerEvents = 'none';
+    if (ghostLabel) ghostLabel.style.pointerEvents = 'none';
+    syncGhostLabel();
+    // Keep label trailing above ghost every frame
+    gsap.ticker.add(syncGhostLabel);
+
+    function revealGhost() {
+      ghost.style.opacity = '1';
+      ghost.style.pointerEvents = 'auto';
+      if (ghostLabel) {
+        ghostLabel.style.opacity = '1';
+        ghostLabel.style.pointerEvents = 'auto';
+      }
+    }
 
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       intro.eventCallback('onComplete', () => {
         if (ghostStarted) return;
         ghostStarted = true;
-        ghostLoop();
+        revealGhost();
+        gsap.delayedCall(1, ghostLoop);
       });
 
       window.addEventListener('resize', () => {
@@ -438,14 +463,20 @@ window.onload = function () {
         ghostResize = setTimeout(() => {
           if (ghostStarted) ghostLoop();
           else placeGhost();
+          syncGhostLabel();
         }, 200);
+      });
+    } else {
+      // Reduced motion: still reveal after hero
+      intro.eventCallback('onComplete', () => {
+        revealGhost();
+        placeGhost();
       });
     }
 
     /* ── GHOST UNMASK SMOKE TRANSITION (exact from mockup) ── */
     const smokeCanvas = document.getElementById('smoke');
     const unmaskedImg = document.getElementById('unmasked');
-    let ghostUnmasked = false;
 
     // Canvas internal resolution — 2x larger square so particles expand equally in all directions
     const CANVAS_W = 400;
@@ -603,14 +634,25 @@ window.onload = function () {
         // Swap ghost → unmasked
         ghost.style.opacity = '0';
         unmaskedImg.style.opacity = '1';
-        // Fade out unmasked after delay
+        // Show WORMS! above unmasked
+        if (ghostLabel) {
+          ghostLabel.innerHTML = '<span style="color:#ff1493">WORMS!</span>';
+          const r = unmaskedImg.getBoundingClientRect();
+          ghostLabel.style.left = (r.left + r.width / 2) + 'px';
+          ghostLabel.style.top = (r.top - ghostLabel.offsetHeight - 6) + 'px';
+          ghostLabel.style.transform = 'translateX(-50%)';
+          ghostLabel.style.opacity = '1';
+        }
+        // Fade out unmasked + label after delay
         setTimeout(() => {
           unmaskedImg.style.opacity = '0';
+          if (ghostLabel) ghostLabel.style.opacity = '0';
           // Clean up after fade
           setTimeout(() => {
             ghost.remove();
             smokeCanvas.remove();
             unmaskedImg.remove();
+            if (ghostLabel) ghostLabel.remove();
           }, 1000);
         }, 4000);
       }
@@ -620,8 +662,13 @@ window.onload = function () {
       if (ghostUnmasked || animating) return;
       ghostUnmasked = true;
 
-      // Stop ghost drift
+      // Stop ghost drift and hide label
       if (ghostTl) ghostTl.kill();
+      gsap.ticker.remove(syncGhostLabel);
+      if (ghostLabel) {
+        ghostLabel.style.opacity = '0';
+        ghostLabel.style.pointerEvents = 'none';
+      }
       ghost.style.pointerEvents = 'none';
 
       // Position canvas and unmasked at ghost's current screen position
@@ -652,6 +699,11 @@ window.onload = function () {
 
     ghost.addEventListener('click', triggerUnmask);
     ghost.addEventListener('touchstart', triggerUnmask, { passive: true });
+    if (ghostLabel) {
+      ghostLabel.style.cursor = 'pointer';
+      ghostLabel.addEventListener('click', triggerUnmask);
+      ghostLabel.addEventListener('touchstart', triggerUnmask, { passive: true });
+    }
   }
 
   /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */

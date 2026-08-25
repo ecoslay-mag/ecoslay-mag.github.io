@@ -845,6 +845,40 @@ h3.apply-heading {
 }
 
 /* ── GHOST ── */
+#ghost-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 550;
+  font-size: clamp(11.25px, 10.5px + 0.225vw, 13.5px);
+  color: #111;
+  background: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  will-change: transform;
+  box-shadow: 0 0 8px rgba(255, 179, 198, 0.9), 0 0 16px rgba(255, 20, 147, 0.5);
+  text-shadow: 0 0 6px rgba(255, 179, 198, 0.8);
+  animation: ghostLabelGlow 1.4s ease-in-out infinite alternate;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+@keyframes ghostLabelGlow {
+  from {
+    box-shadow: 0 0 6px rgba(255, 179, 198, 0.7), 0 0 12px rgba(255, 20, 147, 0.35);
+    text-shadow: 0 0 4px rgba(255, 179, 198, 0.6);
+  }
+  to {
+    box-shadow: 0 0 10px rgba(255, 179, 198, 1), 0 0 22px rgba(255, 20, 147, 0.7), 0 0 32px rgba(255, 179, 198, 0.5);
+    text-shadow: 0 0 8px rgba(255, 179, 198, 1), 0 0 14px rgba(255, 20, 147, 0.5);
+  }
+}
+
 #ghost {
   position: fixed;
   top: 0;
@@ -855,6 +889,8 @@ h3.apply-heading {
   z-index: 50;
   will-change: transform;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 #smoke {
