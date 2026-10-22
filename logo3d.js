@@ -50,15 +50,15 @@ function init() {
   const bloomCamera = camera.clone();
   bloomCamera.layers.set(1);
 
-  const pointLight = new THREE.PointLight(0xffffff, 22);
+  const pointLight = new THREE.PointLight(0xffffff, 26);
   pointLight.position.set(-3.2, 1.8, 2.0);
   scene.add(pointLight);
 
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
   keyLight.position.set(-3.5, 2.5, 3.5);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.25);
   fillLight.position.set(2.5, 1, 2);
   scene.add(fillLight);
 
@@ -66,25 +66,30 @@ function init() {
   pinkLight.position.set(2.8, 1.4, 2.4);
   scene.add(pinkLight);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xa0a0a0, 0.55));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x909090, 0.32));
 
   const group = new THREE.Group();
   scene.add(group);
 
-  const EDGE_COLOR = 0xffb6d9;
-  const GLOW_COLOR = 0xffcbe2;
+  const EDGE_COLOR = 0xff8fc4;
+  const GLOW_COLOR = 0xffb0da;
   const HIGHLIGHT_COLOR = 0xffffff;
+  const SHADOW_COLOR = 0xd94f93;
+  const SETTLE_PITCH = THREE.MathUtils.degToRad(4);
+  const SETTLE_YAW = THREE.MathUtils.degToRad(-12);
   const scanBounds = new THREE.Vector2(-0.2635, 0.2635);
 
   const hologramUniforms = {
     uTime: { value: 0 },
     uEdgeColor: { value: new THREE.Color(EDGE_COLOR) },
     uHighlightColor: { value: new THREE.Color(HIGHLIGHT_COLOR) },
-    uRimStrength: { value: 0.30 },
+    uRimStrength: { value: 0.42 },
     uScanIntensity: { value: 0.008 },
     uShimmerIntensity: { value: 0.04 },
     uBandIntensity: { value: 0.08 },
-    uScanBounds: { value: scanBounds }
+    uScanBounds: { value: scanBounds },
+    uShadowColor: { value: new THREE.Color(SHADOW_COLOR) },
+    uShadowStrength: { value: 0.85 }
   };
 
   const glowUniforms = {
@@ -113,6 +118,8 @@ function init() {
     shader.uniforms.uShimmerIntensity = hologramUniforms.uShimmerIntensity;
     shader.uniforms.uBandIntensity = hologramUniforms.uBandIntensity;
     shader.uniforms.uScanBounds = hologramUniforms.uScanBounds;
+    shader.uniforms.uShadowColor = hologramUniforms.uShadowColor;
+    shader.uniforms.uShadowStrength = hologramUniforms.uShadowStrength;
 
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -136,6 +143,8 @@ function init() {
         uniform float uShimmerIntensity;
         uniform float uBandIntensity;
         uniform vec2 uScanBounds;
+        uniform vec3 uShadowColor;
+        uniform float uShadowStrength;
         varying vec3 vHoloLocal;`
       )
       .replace(
@@ -160,6 +169,10 @@ function init() {
         gl_FragColor.rgb += uEdgeColor * holoFresnel * holoShimmer * uShimmerIntensity;
         gl_FragColor.rgb += uEdgeColor * scanBand * uBandIntensity;
         gl_FragColor.rgb += uHighlightColor * scanBand * 0.025;
+
+        float holoLight = clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0);
+        float shadow = (1.0 - holoLight) * uShadowStrength;
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, uShadowColor, shadow);
 
         #include <tonemapping_fragment>`
       );
@@ -366,11 +379,7 @@ function init() {
 
   function animateIntro() {
     if (!window.gsap || reduceMotion) {
-      group.rotation.set(
-        THREE.MathUtils.degToRad(4),
-        THREE.MathUtils.degToRad(-12),
-        0
-      );
+      group.rotation.set(SETTLE_PITCH, SETTLE_YAW, 0);
       draw();
       return;
     }
@@ -382,8 +391,8 @@ function init() {
     spinActive = true;
 
     window.gsap.to(group.rotation, {
-      x: THREE.MathUtils.degToRad(4),
-      y: THREE.MathUtils.degToRad(-12) - Math.PI * 2,
+      x: SETTLE_PITCH,
+      y: SETTLE_YAW - Math.PI * 2,
       duration: 3.5,
       delay: 0.4,
       ease: 'power2.inOut',
@@ -426,9 +435,12 @@ function init() {
       const halfWidth = size.x / 2;
       const halfHeight = size.y / 2;
       const halfDepth = size.z / 2;
-      const pitch = THREE.MathUtils.degToRad(4);
-      const maxHalfWidth = Math.hypot(halfWidth, halfDepth);
-      const maxHalfHeight = halfHeight * Math.cos(pitch) + maxHalfWidth * Math.sin(pitch);
+      const maxHalfWidth =
+        halfWidth * Math.abs(Math.cos(SETTLE_YAW))
+        + halfDepth * Math.abs(Math.sin(SETTLE_YAW));
+      const maxHalfHeight =
+        halfHeight * Math.abs(Math.cos(SETTLE_PITCH))
+        + maxHalfWidth * Math.abs(Math.sin(SETTLE_PITCH));
       const fitMargin = 1.05;
       fitHalfWidth = maxHalfWidth * fitMargin;
       fitHalfHeight = maxHalfHeight * fitMargin;

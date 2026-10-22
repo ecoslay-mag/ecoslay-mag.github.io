@@ -95,8 +95,8 @@ test('3D logo starts front-facing and spins once with an orthographic camera', (
   assert.match(js, /prefers-reduced-motion/);
   assert.match(js, /Math\.PI\s*\*\s*2|2\s*\*\s*Math\.PI/);
   assert.match(js, /gsap\.(?:to|timeline)/);
-  assert.match(js, /THREE\.MathUtils\.degToRad\(4\)/);
-  assert.match(js, /THREE\.MathUtils\.degToRad\(-12\)/);
+  assert.match(js, /degToRad\(4\)/);
+  assert.match(js, /degToRad\(-12\)/);
 });
 
 test('hologram adds pink rim, horizontal scan lines, and edge shimmer to the white material', () => {
@@ -107,7 +107,7 @@ test('hologram adds pink rim, horizontal scan lines, and edge shimmer to the whi
   assert.match(js, /uEdgeColor/);
   assert.match(js, /uScanIntensity/);
   assert.match(js, /uShimmerIntensity/);
-  assert.match(js, /0xffb6d9/i);
+  assert.match(js, /0xff8fc4/i);
   assert.match(js, /0xffffff/i);
   assert.match(js, /vHoloLocal/);
   assert.match(js, /holoFresnel/);
@@ -137,7 +137,7 @@ test('hologram uses selective pink bloom without tinting the background', () => 
   assert.match(js, /bloomCamera\.layers\.set\(1\)/);
   assert.match(js, /layers\.set\(1\)/);
   assert.match(js, /bloomComposer\.renderToScreen\s*=\s*false/);
-  assert.match(js, /0xffcbe2/i);
+  assert.match(js, /0xffb0da/i);
   assert.match(js, /bloomTintColors/);
   assert.match(js, /base\.rgb\s*\*\s*base\.a\s*\+\s*bloom/);
   assert.match(js, /vec4\(base\.rgb\s*\*\s*base\.a\s*\+\s*bloom,\s*base\.a\)/);
