@@ -24,43 +24,10 @@ window.onload = function () {
     });
   });
 
-  /* ── MELT ANIMATION ── */
-  const turb = document.querySelector("#turb");
-  const disp = document.querySelector("#disp");
-
-  const melt = gsap.timeline({ repeat: 0, repeatDelay: 1.5 });
-
-  melt
-    .to(turb, {
-      duration: 1.4,
-      ease: "power2.in",
-      attr: { baseFrequency: "0.025 0.09" }
-    })
-    .to(disp, {
-      duration: 1.8,
-      ease: "power3.in",
-      attr: { scale: 120 }
-    }, "<0.3")
-    .to({}, { duration: 0.8 })
-    .to(disp, {
-      duration: 4.5,
-      ease: "elastic.out(1, 0.5)",
-      attr: { scale: 0 }
-    })
-    .to(turb, {
-      duration: 3.0,
-      ease: "power2.out",
-      attr: { baseFrequency: "0.02 0.06" }
-    }, "<0.4");
-
-
-
-
-  
   /* ── HERO SEQUENCE ── */
   const stage = document.querySelector('.stage');
   
-  const intro = gsap.timeline({ delay: 3 });
+  const intro = gsap.timeline({ delay: 1 });
   
   intro
     .to(".stage", {
