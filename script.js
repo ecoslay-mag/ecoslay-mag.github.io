@@ -81,9 +81,7 @@ window.onload = function () {
   const scrollPrompt = document.getElementById('scroll-prompt');
   if (scrollPrompt) {
     scrollPrompt.addEventListener('click', () => {
-      const target = window.matchMedia('(max-width: 600px)').matches
-        ? document.getElementById('about')
-        : document.getElementById('scoobydoo-unity');
+      const target = document.getElementById('about');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }
@@ -404,131 +402,436 @@ window.onload = function () {
     });
   });
 
-  /* ── UNIFIED NOODLE CRAWL ── */
-  const unitySection = document.getElementById('scoobydoo-unity');
-  if (unitySection) {
-    const STROKE_STAGGER = 0.06;
-    const STROKE_DRAW_TIME = 2.0;
-    const OUTLINE_WIDTH = 7;
-    const STROKE_DRAW_ORDER = [0, 12, 2, 10, 4, 8, 6, 1, 3, 5, 7, 9, 11];
+  /* ── GHOST BOTTOM DRIFT ── */
+  const ghost = document.getElementById('ghost');
+  const ghostLabel = document.getElementById('ghost-label');
+  if (ghost && window.gsap) {
+    const SPEED = 120;
+    let ghostTl;
+    let ghostStarted = false;
+    let ghostResize;
+    let ghostUnmasked = false;
 
-    const strokes = Array.from(document.querySelectorAll('.stroke')).map(fill => {
-      const fillWidth = parseFloat(fill.getAttribute('stroke-width'));
-      const outline = fill.cloneNode(true);
-      outline.setAttribute('stroke', '#141414');
-      fill.setAttribute('stroke-width', fillWidth - OUTLINE_WIDTH);
-      fill.before(outline);
-      const length = fill.getTotalLength();
-      const layers = [outline, fill];
-      layers.forEach(layer => {
-        layer.style.strokeDasharray = length;
-        layer.style.strokeDashoffset = length;
-      });
-      return { layers, length };
-    });
+    function syncGhostLabel() {
+      if (!ghostLabel || ghostUnmasked) return;
+      const r = ghost.getBoundingClientRect();
+      ghostLabel.style.left = (r.left + r.width / 2) + 'px';
+      ghostLabel.style.top = (r.top - ghostLabel.offsetHeight - 6) + 'px';
+      ghostLabel.style.transform = 'translateX(-50%)';
+    }
 
-    const sparkles = gsap.utils.toArray('.sparkle');
-    const beforeImg = document.getElementById('scooby-before');
-    const afterImg = document.getElementById('scooby-after');
-    const ccImg = document.getElementById('scooby-cc');
-    const wormImg = document.getElementById('scooby-worm');
-    const ecoslayImg = document.getElementById('scooby-ecoslay');
+    function placeGhost() {
+      gsap.set(ghost, { x: 0, y: window.innerHeight - ghost.offsetHeight });
+    }
 
-    const startTime = (order) => order * STROKE_STAGGER;
-    const timingWobble = (order) => (order % 2 === 0 ? 0 : STROKE_STAGGER * 0.6);
-    const drawDuration = (order) => STROKE_DRAW_TIME + (order % 3) * 0.12;
+    function ghostLoop() {
+      if (ghostTl) ghostTl.kill();
+      placeGhost();
+      const maxX = Math.max(window.innerWidth - ghost.offsetWidth, 0);
+      ghostTl = gsap.timeline({ repeat: -1, defaults: { ease: 'none' } });
+      ghostTl
+        .to(ghost, { x: maxX, duration: maxX / SPEED })
+        .to(ghost, { x: 0, duration: maxX / SPEED });
+    }
 
-    const drawSteps = STROKE_DRAW_ORDER.map((strokeIndex, order) => ({
-      strokeIndex,
-      at: startTime(order) + timingWobble(order),
-      duration: drawDuration(order),
-    }));
-    const coveredAt = Math.max(...drawSteps.map(step => step.at + step.duration));
+    placeGhost();
+    ghost.style.pointerEvents = 'none';
+    if (ghostLabel) ghostLabel.style.pointerEvents = 'none';
+    syncGhostLabel();
+    // Keep label trailing above ghost every frame
+    gsap.ticker.add(syncGhostLabel);
 
-    const CYCLE_GAP = 6;
+    function revealGhost() {
+      ghost.style.opacity = '1';
+      ghost.style.pointerEvents = 'auto';
+      if (ghostLabel) {
+        ghostLabel.style.opacity = '1';
+        ghostLabel.style.pointerEvents = 'auto';
+      }
+    }
 
-    function addCycle(tl, offset, hideImg, showImg, reverse) {
-      tl.call(() => {
-        strokes.forEach(({ layers, length }) => {
-          const val = reverse ? -length : length;
-          layers.forEach(layer => layer.style.strokeDashoffset = val);
-        });
-      }, [], offset);
-
-      drawSteps.forEach(({ strokeIndex, at, duration }) => {
-        tl.to(
-          strokes[strokeIndex].layers,
-          { strokeDashoffset: 0, duration, ease: 'power2.out' },
-          offset + at,
-        );
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      intro.eventCallback('onComplete', () => {
+        if (ghostStarted) return;
+        ghostStarted = true;
+        revealGhost();
+        gsap.delayedCall(1, ghostLoop);
       });
 
-      tl.set(showImg, { opacity: 1 }, offset + coveredAt - 0.15);
-      tl.set(hideImg, { opacity: 0 }, offset + coveredAt - 0.15);
-
-      [...STROKE_DRAW_ORDER].reverse().forEach((strokeIndex, order) => {
-        const { layers, length } = strokes[strokeIndex];
-        tl.to(
-          layers,
-          { strokeDashoffset: reverse ? length : -length, duration: drawDuration(order), ease: 'power2.in' },
-          offset + coveredAt + startTime(order) + timingWobble(order),
-        );
+      window.addEventListener('resize', () => {
+        clearTimeout(ghostResize);
+        ghostResize = setTimeout(() => {
+          if (ghostStarted) ghostLoop();
+          else placeGhost();
+          syncGhostLabel();
+        }, 200);
       });
-
-      sparkles.forEach((sparkle, index) => {
-        const popAt = offset + coveredAt - 0.4 + index * 0.25;
-        tl
-          .fromTo(sparkle, { scale: 0, rotate: -60, transformOrigin: 'center' },
-            { scale: 1, rotate: 60, duration: 0.5, ease: 'back.out(2)' }, popAt)
-          .to(sparkle, { scale: 0, rotate: 140, duration: 0.5, ease: 'back.in(2)' }, popAt + 0.6);
+    } else {
+      // Reduced motion: still reveal after hero
+      intro.eventCallback('onComplete', () => {
+        revealGhost();
+        placeGhost();
       });
     }
 
-    let started = false;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !started) {
-          started = true;
-          observer.disconnect();
+    /* ── GHOST UNMASK SMOKE TRANSITION (exact from mockup) ── */
+    const smokeCanvas = document.getElementById('smoke');
+    const unmaskedImg = document.getElementById('unmasked');
 
-          const timeline = gsap.timeline({ delay: 2 });
+    // Canvas internal resolution — 2x larger square so particles expand equally in all directions
+    const CANVAS_W = 400;
+    const CANVAS_H = 400;
+    smokeCanvas.width = CANVAS_W;
+    smokeCanvas.height = CANVAS_H;
+    const ctx = smokeCanvas.getContext('2d');
+    // Ghost display is ~1.91:1, canvas is 1:1 → scale Y by 1/1.91 to compensate browser stretch
+    const DRAW_SCALE_Y = 1 / 1.91;
 
-          addCycle(timeline, 0, beforeImg, afterImg);
-          const c2 = coveredAt + CYCLE_GAP;
-          addCycle(timeline, c2, afterImg, ccImg);
-          const c3 = c2 + coveredAt + CYCLE_GAP;
-          addCycle(timeline, c3, ccImg, wormImg);
-          const c4 = c3 + coveredAt + CYCLE_GAP;
+    // Pre-render puff textures — 1.5x larger for 50% bigger coverage
+    const puffSizes = [15, 24, 33, 45, 60, 83];
+    const variantsPerSize = 3;
+    const puffTextures = puffSizes.map(r =>
+      Array.from({ length: variantsPerSize }, () => makePuffTexture(r))
+    );
 
-          timeline.call(() => {
-            strokes.forEach(({ layers }) => {
-              layers[1].style.stroke = '#ffb3c6';
-            });
-          }, [], c4);
+    function makePuffTexture(radius) {
+      const size = radius * 3;
+      const c = radius * 1.5;
+      const off = document.createElement('canvas');
+      off.width = size;
+      off.height = size;
+      const octx = off.getContext('2d');
 
-          addCycle(timeline, c4, wormImg, ecoslayImg, true);
+      function lobe(ox, oy, r, coreAlpha) {
+        const grad = octx.createRadialGradient(c + ox, c + oy, 0, c + ox, c + oy, r);
+        grad.addColorStop(0, `rgba(255,255,255,${coreAlpha})`);
+        grad.addColorStop(0.35, `rgba(255,255,255,${coreAlpha * 0.7})`);
+        grad.addColorStop(0.7, `rgba(255,255,255,${coreAlpha * 0.25})`);
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        octx.fillStyle = grad;
+        octx.beginPath();
+        octx.arc(c + ox, c + oy, r, 0, Math.PI * 2);
+        octx.fill();
+      }
 
-          timeline.set(strokes.map(s => s.layers).flat(), { opacity: 0 }, c4 + coveredAt + 3);
+      // EXACT from mockup: central 0.7, offset 0.45-0.75
+      lobe(0, 0, radius, 0.7);
+      const lobeCount = 3 + Math.floor(Math.random() * 4);
+      for (let i = 0; i < lobeCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = radius * (0.35 + Math.random() * 0.55);
+        const lr = radius * (0.35 + Math.random() * 0.55);
+        lobe(Math.cos(angle) * dist, Math.sin(angle) * dist, lr, 0.45 + Math.random() * 0.3);
+      }
+      return off;
+    }
 
-          timeline.call(() => {
-            const p = document.getElementById('scooby-scroll-prompt');
-            if (p) {
-              p.style.opacity = 1;
-              p.style.pointerEvents = 'auto';
-            }
-          }, [], c4 + coveredAt + 3.5);
+    function spawnParticle(cx, cy, opts) {
+      const angle = Math.random() * Math.PI * 2;
+      const isCore = opts.core;
+      const speed = isCore
+        ? (Math.random() * 0.4 + 0.05) * 2
+        : (Math.random() * 1.8 + 0.6) * 2;
+      const sizeIndex = isCore
+        ? puffSizes.length - 1 - Math.floor(Math.random() * 2)
+        : Math.floor(Math.random() * puffSizes.length);
+      const variant = puffTextures[sizeIndex][Math.floor(Math.random() * variantsPerSize)];
 
-          const scrollPrompt = document.getElementById('scooby-scroll-prompt');
-          if (scrollPrompt) {
-            scrollPrompt.addEventListener('click', () => {
-              const target = document.getElementById('about');
-              if (target) target.scrollIntoView({ behavior: 'smooth' });
-            });
+      return {
+        x: cx + (Math.random() - 0.5) * (isCore ? 20 : 160),
+        y: cy + (Math.random() - 0.5) * (isCore ? 20 : 160),
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - (isCore ? 0.2 : 0.6),
+        size: puffSizes[sizeIndex],
+        tex: variant,
+        life: 0,
+        maxLife: isCore ? (35 + Math.random() * 15) : (25 + Math.random() * 20),
+        growth: isCore ? (1.024 + Math.random() * 0.016) : (1.01 + Math.random() * 0.016),
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.04,
+        scaleX: 0.75 + Math.random() * 0.6,
+        scaleY: 0.75 + Math.random() * 0.6,
+        turbPhase: Math.random() * Math.PI * 2,
+        turbSpeed: (0.03 + Math.random() * 0.05) * 2,
+        turbStrength: isCore ? 0.05 : 0.2,
+        delay: isCore ? Math.random() * 3 : Math.random() * 9,
+      };
+    }
+
+    let particles = [];
+    let animating = false;
+    let frame = 0;
+    const totalFrames = 65;
+
+    function tick() {
+      frame++;
+      ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+      let anyAlive = false;
+
+      for (const p of particles) {
+        if (frame < p.delay) { anyAlive = true; continue; }
+
+        p.life++;
+        if (p.life > p.maxLife) continue;
+        anyAlive = true;
+
+        p.turbPhase += p.turbSpeed;
+        p.vx += Math.cos(p.turbPhase) * p.turbStrength * 0.1;
+        p.vy += Math.sin(p.turbPhase * 1.3) * p.turbStrength * 0.1;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.size *= p.growth;
+        p.rotation += p.rotSpeed;
+
+        const lifeRatio = p.life / p.maxLife;
+        let alpha;
+        if (lifeRatio < 0.15) alpha = lifeRatio / 0.15;
+        else if (lifeRatio < 0.6) alpha = 1;
+        else alpha = 1 - (lifeRatio - 0.6) / 0.4;
+
+        const drawSize = p.size * 3;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.scale(p.scaleX, p.scaleY * DRAW_SCALE_Y);
+        ctx.drawImage(p.tex, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+        ctx.restore();
+      }
+
+// Soft edge fade — elliptical gradient with simple turbulence
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.save();
+      // Scale Y to create ellipse matching ghost aspect (~1.91:1)
+      ctx.translate(CANVAS_W/2, CANVAS_H/2);
+      ctx.scale(1, 1.91);
+      // Simple turbulence: modulate radius with sine waves based on frame (2x speed)
+      const baseRadius = CANVAS_W/2 * 1.05;
+      const turb1 = Math.sin(frame * 0.16) * 8;
+      const turb2 = Math.sin(frame * 0.26 * 1.7) * 5;
+      const turb3 = Math.sin(frame * 0.10 * 2.3) * 3;
+      const radius = baseRadius + turb1 + turb2 + turb3;
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+      grad.addColorStop(0, 'rgba(0,0,0,1)');
+      grad.addColorStop(0.65, 'rgba(0,0,0,1)');
+      grad.addColorStop(0.85, 'rgba(0,0,0,0.3)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(-CANVAS_W/2, -CANVAS_H/2, CANVAS_W, CANVAS_H);
+      ctx.restore();
+      ctx.globalCompositeOperation = 'source-over';
+
+      if (frame < totalFrames && anyAlive) {
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+        animating = false;
+        // Swap ghost → unmasked
+        ghost.style.opacity = '0';
+        unmaskedImg.style.opacity = '1';
+        // Show WORMS! above unmasked
+        if (ghostLabel) {
+          ghostLabel.innerHTML = '<span style="color:#ff1493">WORMS!</span>';
+          const r = unmaskedImg.getBoundingClientRect();
+          ghostLabel.style.left = (r.left + r.width / 2) + 'px';
+          ghostLabel.style.top = (r.top - ghostLabel.offsetHeight - 6) + 'px';
+          ghostLabel.style.transform = 'translateX(-50%)';
+          ghostLabel.style.opacity = '1';
+        }
+        // Fade out unmasked + label after delay
+        setTimeout(() => {
+          unmaskedImg.style.opacity = '0';
+          if (ghostLabel) ghostLabel.style.opacity = '0';
+          // Clean up after fade
+          setTimeout(() => {
+            ghost.remove();
+            smokeCanvas.remove();
+            unmaskedImg.remove();
+            if (ghostLabel) ghostLabel.remove();
+          }, 1000);
+        }, 4000);
+      }
+    }
+
+    function triggerUnmask() {
+      if (ghostUnmasked || animating) return;
+      ghostUnmasked = true;
+
+      // Stop ghost drift and hide label
+      if (ghostTl) ghostTl.kill();
+      gsap.ticker.remove(syncGhostLabel);
+      if (ghostLabel) {
+        ghostLabel.style.opacity = '0';
+        ghostLabel.style.pointerEvents = 'none';
+      }
+      ghost.style.pointerEvents = 'none';
+
+      // Position canvas and unmasked at ghost's current screen position
+      const rect = ghost.getBoundingClientRect();
+      smokeCanvas.style.width = rect.width + 'px';
+      smokeCanvas.style.height = rect.height + 'px';
+      smokeCanvas.style.left = rect.left + 'px';
+      smokeCanvas.style.top = rect.top + 'px';
+      smokeCanvas.style.transform = 'none';
+
+      unmaskedImg.style.width = rect.width + 'px';
+      unmaskedImg.style.height = rect.height + 'px';
+      unmaskedImg.style.left = rect.left + 'px';
+      unmaskedImg.style.top = rect.top + 'px';
+      unmaskedImg.style.transform = 'none';
+
+      // Spawn particles at center of canvas — increased counts for full coverage
+      const cx = CANVAS_W / 2;
+      const cy = CANVAS_H / 2;
+      particles = [];
+      for (let i = 0; i < 80; i++) particles.push(spawnParticle(cx, cy, { core: true }));
+      for (let i = 0; i < 140; i++) particles.push(spawnParticle(cx, cy, { core: false }));
+
+      frame = 0;
+      animating = true;
+      requestAnimationFrame(tick);
+    }
+
+    ghost.addEventListener('click', triggerUnmask);
+    ghost.addEventListener('touchstart', triggerUnmask, { passive: true });
+    if (ghostLabel) {
+      ghostLabel.style.cursor = 'pointer';
+      ghostLabel.addEventListener('click', triggerUnmask);
+      ghostLabel.addEventListener('touchstart', triggerUnmask, { passive: true });
+    }
+  }
+
+  /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */
+  const bgCurrent = document.getElementById('bg-current');
+  const bgNext = document.getElementById('bg-next');
+  const sections = [
+    { id: 'about',     bg: 'images/pages/anthology-103.webp' },
+    { id: 'magazine',  bg: 'images/pages/anthology-23.webp' },
+    { id: 'open-call', bg: 'images/pages/anthology-53.webp' },
+    { id: 'events',    bg: 'images/pages/anthology-71.webp' },
+    { id: 'team',      bg: 'images/pages/anthology-93.webp' },
+    { id: 'contact',   bg: 'images/pages/anthology-08.webp' },
+    { id: 'partners',  bg: 'images/pages/anthology-08.webp' },
+    { id: 'impressum', bg: 'images/pages/anthology-08.webp' }
+  ];
+
+  if (bgCurrent && bgNext && sections.length) {
+    const sectionEls = sections.map(s => ({ ...s, el: document.getElementById(s.id) })).filter(s => s.el);
+    const spacers = Array.from(document.querySelectorAll('.bg-transition-spacer'));
+
+    // Map spacer data-to to target section and its bg
+    const bgMap = Object.fromEntries(sections.map(s => [s.id, s.bg]));
+    bgMap.hero = null;
+
+    const transitions = spacers.map(spacer => {
+      const targetId = spacer.dataset.to;
+      const targetIdx = sectionEls.findIndex(se => se.id === targetId);
+      const fromId = targetIdx > 0 ? sectionEls[targetIdx - 1].id : 'hero';
+      
+      return {
+        el: spacer,
+        fromBg: bgMap[fromId],
+        toBg: bgMap[targetId],
+        targetId,
+        fromId,
+        top: 0,
+        bottom: 0,
+        height: 0,
+        transitionStart: 0,
+        transitionEnd: 0
+      };
+    });
+
+    // Preload all backgrounds
+    sections.forEach(s => { new Image().src = s.bg; });
+
+    let bgTick = false;
+
+    function updateSpacerBounds() {
+      transitions.forEach(t => {
+        const rect = t.el.getBoundingClientRect();
+        t.top = rect.top + window.scrollY;
+        t.bottom = rect.bottom + window.scrollY;
+        t.height = rect.height;
+      });
+    }
+
+    function updateTransitionPositions() {
+      const vh = window.innerHeight;
+      transitions.forEach(t => {
+        // Spacer top IS the section bottom (they're flush).
+        // Transition: starts at spacerTop - 85vh, ends at spacerTop + 15vh (100vh rise)
+        t.transitionStart = t.top + (-85) * vh / 100;
+        t.transitionEnd = t.top + 15 * vh / 100;
+      });
+    }
+
+    function update() {
+      // Recalculate each frame — lazy images shift layout after initial load
+      updateSpacerBounds();
+      updateTransitionPositions();
+
+      const scrollY = window.scrollY;
+      const vh = window.innerHeight;
+
+      // Find active transition (spacerTop - 85vh to spacerTop + 15vh)
+      let activeTransition = null;
+      for (const t of transitions) {
+        if (scrollY >= t.transitionStart && scrollY <= t.transitionEnd) {
+          activeTransition = t;
+          break;
+        }
+      }
+
+      if (activeTransition) {
+        // Transition over 100vh: new bg rises from bottom to full
+        const transitionHeight = 100 * vh / 100;
+        const progress = Math.min(1, Math.max(0, (scrollY - activeTransition.transitionStart) / transitionHeight));
+        bgNext.style.backgroundImage = `url("${activeTransition.toBg}")`;
+        bgNext.style.setProperty('--reveal', `${progress * 100}%`);
+
+        // If transition complete, commit to bgCurrent
+        if (progress >= 1) {
+          bgCurrent.style.backgroundImage = `url("${activeTransition.toBg}")`;
+          bgNext.style.setProperty('--reveal', '0%');
+        }
+      } else {
+        // Not in a transition - find last completed transition
+        let lastCompleted = null;
+        for (const t of transitions) {
+          if (scrollY > t.transitionEnd) {
+            lastCompleted = t;
           }
         }
-      });
-    }, { threshold: 0.5 });
+        if (lastCompleted) {
+          bgCurrent.style.backgroundImage = `url("${lastCompleted.toBg}")`;
+        } else {
+          // Before first transition - hero, show pink (no bg on bgCurrent)
+          bgCurrent.style.backgroundImage = 'none';
+        }
+        bgNext.style.setProperty('--reveal', '0%');
+      }
+    }
 
-    observer.observe(unitySection);
+    function requestUpdate() {
+      if (bgTick) return;
+      bgTick = true;
+      requestAnimationFrame(() => { update(); bgTick = false; });
+    }
+
+    updateSpacerBounds();
+    updateTransitionPositions();
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      updateTransitionPositions();
+      updateSpacerBounds();
+      requestUpdate();
+    });
   }
 };

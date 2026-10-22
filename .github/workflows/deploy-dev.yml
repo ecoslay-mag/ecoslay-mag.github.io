@@ -1,0 +1,54 @@
+name: Deploy dev (refactor-background → dev.ecoslay-mag.com)
+
+on:
+  push:
+    branches: [refactor-background]
+  workflow_dispatch:
+
+# Required for the dev repo push via PAT/ssh; for same-repo Pages deploy it would be pages:write
+permissions:
+  contents: read
+
+concurrency:
+  group: dev-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    # This job syncs the dev branch to the separate dev repo.
+    # Requires a PAT (DEV_PAT) with repo scope stored as secret DEV_PAT,
+    # or a deploy key. If you prefer manual, just push this branch to the dev repo locally.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare dev CNAME
+        run: echo "dev.ecoslay-mag.com" > CNAME
+
+      - name: Deploy to dev repo (ecoslay-mag/dev.ecoslay-mag.com)
+        # This uses peaceiris/actions-gh-pages to push the current checkout
+        # to the dev repo's main branch (which has Pages enabled).
+        # Create the dev repo first: https://github.com/new → dev.ecoslay-mag.com (public)
+        # Enable Pages: Settings → Pages → Branch: main / root
+        # Add secret DEV_PAT in this repo (Settings → Secrets → Actions → DEV_PAT)
+        # Alternatively, skip this job and just run locally: git push dev-remote refactor-background:main
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ secrets.DEV_PAT != '' }}
+        with:
+          personal_token: ${{ secrets.DEV_PAT }}
+          external_repository: ecoslay-mag/dev.ecoslay-mag.com
+          publish_branch: main
+          publish_dir: .
+          cname: dev.ecoslay-mag.com
+          enable_jekyll: false
+          force_orphan: true
+
+      - name: No DEV_PAT — instructions
+        if: ${{ secrets.DEV_PAT == '' }}
+        run: |
+          echo "::notice::DEV_PAT not set — skipping auto-push."
+          echo "Manual alternative: create repo ecoslay-mag/dev.ecoslay-mag.com, then locally:"
+          echo "  git remote add dev git@github.com-ecoslay:ecoslay-mag/dev.ecoslay-mag.com.git"
+          echo "  git push dev refactor-background:main"
