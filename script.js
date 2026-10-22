@@ -170,8 +170,8 @@ window.onload = function () {
       if (idx >= aboutSlides.length) idx = 0;
       aboutTrack.style.transform = 'translateX(-' + (idx * 100) + '%)';
       preloadAround(aboutTrack, idx);
-      if (idx === 1) {
-        const gif = aboutSlides[1].querySelector('img');
+      if (idx === 0) {
+        const gif = aboutSlides[0].querySelector('img');
         if (gif) gif.src = gif.src;
       }
       startAboutAuto();
@@ -185,7 +185,7 @@ window.onload = function () {
 
     function startAboutAuto() {
       stopAboutAuto();
-      const delay = idx === 1 ? 9000 : 4000;
+      const delay = idx === 0 ? 9000 : 4000;
       interval = setInterval(aboutNextSlide, delay);
     }
     function stopAboutAuto() {
