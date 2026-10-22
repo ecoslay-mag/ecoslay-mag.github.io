@@ -27,4 +27,4 @@ git commit -m "description of changes"
 git push
 ```
 
-The site is static HTML/CSS/JS — pushing to `main` deploys automatically. A Github action is triggered at each push, and takes a few seconds to deploy on https://ecoslay-mag.github.io/.
+The site is static HTML/CSS/JS — pushing to `main` deploys automatically via GitHub Pages' branch build, and takes a few seconds to deploy on https://ecoslay-mag.github.io/.
