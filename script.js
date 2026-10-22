@@ -369,9 +369,10 @@ window.onload = function () {
     });
   });
 
-  /* ── GHOST BOTTOM DRIFT ── */
-  const ghost = document.getElementById('ghost');
-  const ghostLabel = document.getElementById('ghost-label');
+  /* ── GHOST BOTTOM DRIFT (temporarily disabled - replaced by pigeon) ── */
+  const GHOST_ENABLED = false;
+  const ghost = GHOST_ENABLED ? document.getElementById('ghost') : null;
+  const ghostLabel = GHOST_ENABLED ? document.getElementById('ghost-label') : null;
   if (ghost && window.gsap) {
     const SPEED = 120;
     let ghostTl;
