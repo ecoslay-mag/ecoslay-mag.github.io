@@ -56,6 +56,12 @@ test('paris root motion is neutralized and walk is 20 percent faster', () => {
   assert.match(js, /neutralizeRootMotion/);
 });
 
+test('paris turns ten degrees toward the camera to reveal her face', () => {
+  const js = read('paris3d.js');
+  assert.match(js, /PARIS_YAW_OFFSET\s*=\s*Math\.PI \/ 18/);
+  assert.match(js, /model\.rotation\.y\s*=\s*-Math\.PI \/ 2 \+ PARIS_YAW_OFFSET/);
+});
+
 test('walkers start together and cross in eight seconds', () => {
   const pigeon = read('pigeon3d.js');
   const paris = read('paris3d.js');
