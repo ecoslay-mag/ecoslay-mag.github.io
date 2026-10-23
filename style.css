@@ -381,7 +381,7 @@ main {
   --pigeon-bottom: 190px;
   --pigeon-head-inset: 48px;
   --main-top: 92px;
-  --stage-lift: 80px;
+  --stage-lift: 130px;
   --logo-half-height: 18.5565%;
   position: relative;
   width: 125%;
@@ -393,6 +393,13 @@ main {
     - var(--main-top)
     + var(--stage-lift)
   );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.logo-3d.is-revealed,
+.logo-3d.is-fallback {
+  opacity: 1;
 }
 
 .logo-3d canvas,
@@ -975,6 +982,56 @@ h3.apply-heading {
     width: 220px;
     height: 220px;
   }
+}
+
+/* ── WALKER SPEECH BUBBLES ── */
+.walker-bubble {
+  position: fixed;
+  z-index: 61;
+  pointer-events: none;
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 2px solid #111;
+  border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%;
+  box-shadow: 0 6px 0 #000, 0 10px 25px rgba(0,0,0,0.25);
+  padding: 8px 20px;
+  animation: slimeMorph 6s ease-in-out infinite;
+}
+
+.walker-bubble__text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(14px, 12px + 0.6vw, 20px);
+  letter-spacing: 0.12em;
+  color: #111;
+  white-space: nowrap;
+}
+
+/* tails */
+.walker-bubble__tail {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+/* pigeon bubble sits to the right of the walker -> tail points left */
+.walker-bubble--pigeon .walker-bubble__tail {
+  left: -20px;
+  border-right: 20px solid #111;
+}
+
+/* Paris bubble sits to the left of the walker -> tail points right */
+.walker-bubble--paris .walker-bubble__tail {
+  right: -20px;
+  border-left: 20px solid #111;
 }
 
 /* ── SECTION BACKGROUNDS ── */

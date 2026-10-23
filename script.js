@@ -9,6 +9,11 @@ window.scheduleWalkerStart = (function () {
     if (timer) clearTimeout(timer);
     timer = null;
     starts.splice(0).forEach((start) => start());
+    if (typeof window.onWalkersStarted === 'function') {
+      window.onWalkersStarted();
+    } else {
+      window._walkersStartedPending = true;
+    }
   };
 
   return (start) => {
@@ -695,6 +700,47 @@ window.onload = function () {
       ghostLabel.addEventListener('click', triggerUnmask);
       ghostLabel.addEventListener('touchstart', triggerUnmask, { passive: true });
     }
+  }
+
+  /* ── WALKER SPEECH BUBBLES ── */
+  const pigeonBubble = document.getElementById('pigeon-bubble');
+  const parisBubble = document.getElementById('paris-bubble');
+  const pigeonWalker = document.getElementById('pigeon-3d');
+  const parisWalker = document.getElementById('paris-3d');
+
+  function syncBubbles() {
+    if (pigeonWalker && pigeonBubble) {
+      const r = pigeonWalker.getBoundingClientRect();
+      pigeonBubble.style.left = (r.right + 4) + 'px';
+      pigeonBubble.style.top = (r.top + r.height * 0.25) + 'px';
+      pigeonBubble.style.transform = 'none';
+    }
+    if (parisWalker && parisBubble) {
+      const r = parisWalker.getBoundingClientRect();
+      parisBubble.style.left = (r.left - parisBubble.offsetWidth + 100) + 'px';
+      parisBubble.style.top = (r.top + r.height * 0.25 - 15) + 'px';
+      parisBubble.style.transform = 'none';
+    }
+  }
+
+  if (window.gsap) {
+    window.gsap.ticker.add(syncBubbles);
+  }
+
+  window.onWalkersStarted = function () {
+    const bubbles = [pigeonBubble, parisBubble].filter(Boolean);
+    if (window.gsap) {
+      window.gsap.to(bubbles, { opacity: 1, duration: 0.3 });
+      window.gsap.delayedCall(4 /* TRAVEL_DURATION / 2 */, function () {
+        window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
+        if (window.revealHeroLogo) window.revealHeroLogo();
+      });
+    }
+  };
+
+  if (window._walkersStartedPending) {
+    window._walkersStartedPending = false;
+    window.onWalkersStarted();
   }
 
   /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */

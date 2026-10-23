@@ -401,7 +401,23 @@ function init() {
         draw();
       }
     });
+
   }
+
+  let logoRevealed = false;
+  let pendingReveal = false;
+
+  window.revealHeroLogo = function () {
+    if (logoRevealed) return;
+    if (!model) {
+      pendingReveal = true;
+      container.classList.add('is-revealed');
+      return;
+    }
+    logoRevealed = true;
+    container.classList.add('is-revealed');
+    animateIntro();
+  };
 
   new GLTFLoader().load(
     MODEL_URL,
@@ -474,6 +490,10 @@ function init() {
       container.classList.remove('is-fallback');
       canvas.classList.add('is-ready');
 
+      if (pendingReveal && !logoRevealed) {
+        window.revealHeroLogo();
+      }
+
       if ('IntersectionObserver' in window) {
         const visibilityObserver = new IntersectionObserver((entries) => {
           isVisible = entries[0].isIntersecting;
@@ -497,7 +517,9 @@ function init() {
         }
       });
 
-      animateIntro();
+      if (pendingReveal && !logoRevealed) {
+        window.revealHeroLogo();
+      }
     },
     undefined,
     (error) => {

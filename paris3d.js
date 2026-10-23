@@ -9,7 +9,6 @@ const DECODER_PATH = 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/li
 const MODEL_HEIGHT = 2.1;
 const WALK_TIME_SCALE = 0.6;
 const TRAVEL_DURATION = 8;
-const PARIS_YAW_OFFSET = Math.PI / 18;
 const GROUND_GAP = 0.03;
 
 if (container && canvas) init();
@@ -73,7 +72,7 @@ function init() {
     MODEL_URL,
     (gltf) => {
       const model = gltf.scene;
-      model.rotation.y = -Math.PI / 2 + PARIS_YAW_OFFSET;
+      model.rotation.y = -Math.PI / 2;
 
       model.traverse((child) => {
         if (child.isMesh) child.frustumCulled = false;

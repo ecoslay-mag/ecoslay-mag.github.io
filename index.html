@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex">
   <title>ECOSLAY</title>
   <link rel="stylesheet" href="style.css">
-  <noscript><style>.logo-3d img { opacity: 1 !important; }</style></noscript>
+  <noscript><style>.logo-3d, .logo-3d img { opacity: 1 !important; }</style></noscript>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪰</text></svg>">
   <script type="importmap">
   {
@@ -451,6 +451,16 @@
   <img id="unmasked" src="images/unmasked.webp" alt="" aria-hidden="true" style="opacity: 0;">
   -->
 
+  <!-- SPEECH BUBBLES -->
+  <div class="walker-bubble walker-bubble--pigeon" id="pigeon-bubble" aria-hidden="true">
+    <span class="walker-bubble__text">ECOLOGY</span>
+    <span class="walker-bubble__tail" aria-hidden="true"></span>
+  </div>
+  <div class="walker-bubble walker-bubble--paris" id="paris-bubble" aria-hidden="true">
+    <span class="walker-bubble__text">POP CULTURE</span>
+    <span class="walker-bubble__tail" aria-hidden="true"></span>
+  </div>
+
   <!-- PIGEON -->
   <div id="pigeon-3d" aria-hidden="true">
     <canvas id="pigeon-canvas"></canvas>
@@ -463,7 +473,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="script.js"></script>
-  <script type="module" src="logo3d.js" onerror="var l=document.getElementById('logo-3d'); if(l) l.classList.add('is-fallback')"></script>
+  <script type="module" src="logo3d.js" onerror="var l=document.getElementById('logo-3d'); if(l){ l.classList.add('is-fallback'); l.classList.add('is-revealed'); }"></script>
   <script type="module" src="pigeon3d.js"></script>
   <script type="module" src="paris3d.js"></script>
   <script>
