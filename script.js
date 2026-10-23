@@ -1,3 +1,31 @@
+window.scheduleWalkerStart = (function () {
+  const starts = [];
+  let timer = null;
+  let started = false;
+
+  const run = () => {
+    if (started) return;
+    started = true;
+    if (timer) clearTimeout(timer);
+    timer = null;
+    starts.splice(0).forEach((start) => start());
+  };
+
+  return (start) => {
+    if (started) {
+      start();
+      return;
+    }
+
+    starts.push(start);
+    if (starts.length >= 2) {
+      run();
+    } else if (!timer) {
+      timer = setTimeout(run, 8000);
+    }
+  };
+})();
+
 window.onload = function () {
 
   /* ── HAMBURGER TOGGLE ── */
@@ -31,14 +59,9 @@ window.onload = function () {
   
   intro
     .to(".stage", {
-      y: -80, 
+      y: -80,
       duration: 0.8
     })
-    .to("#hero-subtitle", {
-      opacity: 1,
-      y: 0,
-      duration: 0.6
-    }, "-=0.3")
     .to("#scroll-prompt", {
       opacity: 1,
       duration: 0.5

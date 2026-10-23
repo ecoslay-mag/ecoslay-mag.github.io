@@ -49,10 +49,30 @@ test('styles hide the fallback by default and reveal it on failure', () => {
   assert.match(css, /\.logo-3d\.is-fallback img\s*\{[^}]*opacity:\s*1;/s);
 });
 
-test('hero logo is scaled up by 20 percent', () => {
+test('hero logo is 20 percent smaller than the previous size', () => {
   const css = read('style.css');
 
-  assert.match(css, /\.logo-3d\s*\{[^}]*width:\s*120%;/s);
+  assert.match(css, /\.logo-3d\s*\{[^}]*width:\s*125%;/s);
+});
+
+test('hero logo is whiter and centered between nav and pigeon head', () => {
+  const js = read('logo3d.js');
+  const css = read('style.css');
+
+  assert.match(css, /\.stage\s*\{[^}]*justify-content:\s*flex-start;/s);
+  assert.match(css, /\.logo-3d\s*\{[^}]*--pigeon-height:\s*208px;/s);
+  assert.match(css, /\.logo-3d\s*\{[^}]*--pigeon-head-inset:\s*48px;/s);
+  assert.match(css, /\.logo-3d\s*\{[^}]*margin-top:\s*calc\(/s);
+  assert.match(css, /--pigeon-height:\s*176px/);
+  assert.match(css, /--pigeon-head-inset:\s*40\.6px/);
+  assert.match(js, /toneMappingExposure\s*=\s*1\.15/);
+
+  const rim = js.match(/uRimStrength:\s*\{\s*value:\s*([\d.]+)/);
+  const shadow = js.match(/uShadowStrength:\s*\{\s*value:\s*([\d.]+)/);
+  assert.ok(rim, 'rim strength should be defined');
+  assert.ok(shadow, 'shadow strength should be defined');
+  assert.ok(Number(rim[1]) <= 0.3, 'pink rim should be reduced');
+  assert.ok(Number(shadow[1]) <= 0.6, 'pink shadow should be reduced');
 });
 
 test('left-side lighting creates directional shading', () => {

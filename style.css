@@ -13,6 +13,7 @@
   --chrome-mid: #c8c8c8;
   --chrome-dark: #888;
   --chrome-shine: #ffffff;
+  --walker-height: 190px;
 }
 
 body {
@@ -49,7 +50,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: calc(100vh - 92px - 40px);
   position: relative;
 }
@@ -375,11 +376,23 @@ main {
 
 
 .logo-3d {
+  --nav-bottom: 64px;
+  --pigeon-height: 208px;
+  --pigeon-bottom: 190px;
+  --pigeon-head-inset: 48px;
+  --main-top: 92px;
+  --stage-lift: 80px;
+  --logo-half-height: 18.5565%;
   position: relative;
-  width: 120%;
+  width: 125%;
   aspect-ratio: 1.775 / 0.527;
   overflow: visible;
-  margin-top: 180px;
+  margin-top: calc(
+    (var(--nav-bottom) + 100vh - var(--pigeon-bottom) - var(--pigeon-height) + var(--pigeon-head-inset)) / 2
+    - var(--logo-half-height)
+    - var(--main-top)
+    + var(--stage-lift)
+  );
 }
 
 .logo-3d canvas,
@@ -413,26 +426,6 @@ main {
 
 .logo-3d.is-fallback img {
   opacity: 1;
-}
-
-#hero-subtitle {
-  opacity: 0;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(16px, 11.5px + 1.2vw, 28px);
-  font-weight: 550;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #111;
-  background: #fff;
-  padding: 28px 48px;
-  border: 2px solid #111;
-  border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%;
-  box-shadow: 0 6px 0 #000, 0 10px 25px rgba(0,0,0,0.25);
-  text-align: center;
-  max-width: 1000px;
-  width: 100%;
-  margin: 80px auto 0;
-  animation: slimeMorph 6s ease-in-out infinite;
 }
 
 .spaced {
@@ -756,11 +749,6 @@ h3.apply-heading {
     width: 100%;
   }
 
-  #hero-subtitle {
-    padding: 20px 28px;
-    margin-top: 40px;
-  }
-
   #team .team-container {
     max-width: none;
   }
@@ -844,12 +832,6 @@ h3.apply-heading {
   .event-body p,
   .event-meta {
     font-size: clamp(12px, 11px + 0.5vw, 14px);
-  }
-
-  #hero-subtitle {
-    font-size: clamp(12px, 10px + 1.5vw, 15px);
-    padding: 14px 16px;
-    margin-top: 30px;
   }
 
   .topbar-link {
@@ -948,13 +930,11 @@ h3.apply-heading {
   transition: opacity 0.3s ease;
 }
 
-/* ── PIGEON ── */
-#pigeon-3d {
+/* ── PIGEON + PARIS ── */
+#pigeon-3d,
+#paris-3d {
   position: fixed;
-  top: 0;
   left: 0;
-  width: 300px;
-  height: 300px;
   z-index: 60;
   pointer-events: none;
   will-change: transform;
@@ -962,10 +942,39 @@ h3.apply-heading {
   transition: opacity 0.6s ease;
 }
 
-#pigeon-canvas {
+#pigeon-3d {
+  bottom: var(--walker-height);
+  width: 208px;
+  height: 208px;
+}
+
+#paris-3d {
+  bottom: env(safe-area-inset-bottom, 0px);
+  width: 260px;
+  height: 260px;
+}
+
+#pigeon-canvas,
+#paris-canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --walker-height: 160px;
+  }
+
+  #pigeon-3d {
+    width: 176px;
+    height: 176px;
+  }
+
+  #paris-3d {
+    width: 220px;
+    height: 220px;
+  }
 }
 
 /* ── SECTION BACKGROUNDS ── */
@@ -1017,7 +1026,9 @@ h3.apply-heading {
   }
 
   .logo-3d {
-    margin-top: 40px;
+    --pigeon-height: 176px;
+    --pigeon-bottom: 160px;
+    --pigeon-head-inset: 40.6px;
   }
 
   #scroll-prompt {

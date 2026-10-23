@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const container = document.getElementById('pigeon-3d');
 const canvas = document.getElementById('pigeon-canvas');
+const TRAVEL_DURATION = 8;
 
 if (container && canvas) {
   init();
@@ -77,17 +78,23 @@ function init() {
     }
     animate();
     
-    // Show and drift
-    container.style.opacity = '1';
-    if (window.gsap && !reduceMotion) {
-    const y = window.innerHeight - (rect.height || 300);
-    const maxX = window.innerWidth - (rect.width || 300);
-    gsap.set(container, { x: 0, y });
-    gsap.to(container, { x: maxX, duration: maxX / 100, ease: 'none' });
-  } else {
-    container.style.left = '0px';
-    container.style.top = (window.innerHeight - 300) + 'px';
-  }
+    const startDrift = () => {
+      if (mixer) mixer.setTime(0);
+      container.style.opacity = '1';
+      if (window.gsap && !reduceMotion) {
+        const maxX = window.innerWidth - (rect.width || 260);
+        gsap.set(container, { x: 0 });
+        gsap.to(container, { x: maxX, duration: TRAVEL_DURATION, ease: 'none' });
+      } else {
+        container.style.left = '0px';
+      }
+    };
+
+    if (window.scheduleWalkerStart) {
+      window.scheduleWalkerStart(startDrift);
+    } else {
+      startDrift();
+    }
   }, undefined, (err) => {
     console.error('pigeon load err', err);
   });

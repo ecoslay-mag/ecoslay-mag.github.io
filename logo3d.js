@@ -40,7 +40,7 @@ function init() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.15;
 
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 20);
@@ -83,13 +83,13 @@ function init() {
     uTime: { value: 0 },
     uEdgeColor: { value: new THREE.Color(EDGE_COLOR) },
     uHighlightColor: { value: new THREE.Color(HIGHLIGHT_COLOR) },
-    uRimStrength: { value: 0.42 },
+    uRimStrength: { value: 0.28 },
     uScanIntensity: { value: 0.008 },
     uShimmerIntensity: { value: 0.04 },
     uBandIntensity: { value: 0.08 },
     uScanBounds: { value: scanBounds },
     uShadowColor: { value: new THREE.Color(SHADOW_COLOR) },
-    uShadowStrength: { value: 0.85 }
+    uShadowStrength: { value: 0.55 }
   };
 
   const glowUniforms = {
