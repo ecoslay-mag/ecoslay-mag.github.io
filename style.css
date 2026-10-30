@@ -995,20 +995,42 @@ h3.apply-heading {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border: 2px solid #111;
+  background: #000;
+  border: 2px solid #000;
   border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%;
-  box-shadow: 0 6px 0 #000, 0 10px 25px rgba(0,0,0,0.25);
+  box-shadow: none;
   padding: 8px 20px;
   animation: slimeMorph 6s ease-in-out infinite;
 }
 
 .walker-bubble__text {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Hiragino Maru Gothic Pro', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
   font-size: clamp(14px, 12px + 0.6vw, 20px);
-  letter-spacing: 0.12em;
-  color: #111;
+  letter-spacing: 0.06em;
   white-space: nowrap;
+  font-style: italic;
+}
+
+.walker-bubble--pigeon .walker-bubble__text {
+  color: #39ff14;
+  -webkit-text-stroke: 0.6px #003300;
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 4px #39ff14,
+    0 0 8px #39ff14,
+    0 0 14px rgba(57, 255, 20, 0.75),
+    0 0 26px rgba(57, 255, 20, 0.35);
+}
+
+.walker-bubble--paris .walker-bubble__text {
+  color: #ff1493;
+  -webkit-text-stroke: 0.6px #330018;
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 4px #ff1493,
+    0 0 8px #ff1493,
+    0 0 14px rgba(255, 20, 147, 0.75),
+    0 0 26px rgba(255, 20, 147, 0.35);
 }
 
 /* tails */
