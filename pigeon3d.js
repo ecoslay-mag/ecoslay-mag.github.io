@@ -94,9 +94,13 @@ function init() {
           duration: TRAVEL_DURATION,
           ease: 'none',
           onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
+          onComplete: () => {
+            if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
+          },
         });
       } else {
         container.style.setProperty('--travel', '1');
+        if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
       }
     };
 

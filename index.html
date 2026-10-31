@@ -486,6 +486,8 @@
       var logo = document.getElementById('logo-3d');
       if (canvas && logo && !canvas.hasAttribute('data-loading') && !canvas.classList.contains('is-ready')) {
         logo.classList.add('is-fallback');
+        logo.classList.add('is-revealed');
+        if (window.onLogoSpinComplete) window.onLogoSpinComplete();
       }
     }, 6000);
   </script>

@@ -123,9 +123,16 @@ function init() {
             duration: TRAVEL_DURATION,
             ease: 'none',
             onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
+            onComplete: () => {
+              if (window.onWalkerFinished) window.onWalkerFinished('paris');
+            },
           });
         } else if (window.gsap) {
           container.style.setProperty('--travel', '0');
+          if (window.onWalkerFinished) window.onWalkerFinished('paris');
+        } else {
+          container.style.setProperty('--travel', '0');
+          if (window.onWalkerFinished) window.onWalkerFinished('paris');
         }
       };
 

@@ -381,6 +381,7 @@ function init() {
     if (!window.gsap || reduceMotion) {
       group.rotation.set(SETTLE_PITCH, SETTLE_YAW, 0);
       draw();
+      if (window.onLogoSpinComplete) window.onLogoSpinComplete();
       return;
     }
 
@@ -399,6 +400,7 @@ function init() {
       onComplete: () => {
         spinActive = false;
         draw();
+        if (window.onLogoSpinComplete) window.onLogoSpinComplete();
       }
     });
 

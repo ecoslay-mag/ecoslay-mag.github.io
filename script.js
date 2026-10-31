@@ -69,11 +69,7 @@ window.onload = function () {
     .to(".stage", {
       y: -80,
       duration: 0.8
-    })
-    .to("#scroll-prompt", {
-      opacity: 1,
-      duration: 0.5
-    }, "-=0.1");
+    });
 
   /* ── SCROLL PROMPT CLICK ── */
   const scrollPrompt = document.getElementById('scroll-prompt');
@@ -83,6 +79,34 @@ window.onload = function () {
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }
+
+  let logoSpinComplete = false;
+  let walkersFinished = 0;
+  let scrollPromptRevealScheduled = false;
+
+  function maybeRevealScrollPrompt() {
+    if (!logoSpinComplete || walkersFinished < 2 || !scrollPrompt || scrollPromptRevealScheduled) return;
+    scrollPromptRevealScheduled = true;
+    if (window.gsap) {
+      window.gsap.delayedCall(0.5, () => {
+        window.gsap.to(scrollPrompt, { opacity: 1, duration: 0.5 });
+      });
+    } else {
+      setTimeout(() => {
+        scrollPrompt.style.opacity = '1';
+      }, 500);
+    }
+  }
+
+  window.onWalkerFinished = function () {
+    walkersFinished += 1;
+    maybeRevealScrollPrompt();
+  };
+
+  window.onLogoSpinComplete = function () {
+    logoSpinComplete = true;
+    maybeRevealScrollPrompt();
+  };
 
   /* ── CAROUSEL SLIDE LAZY LOAD ── */
   function ensureCarouselImg(slide) {
@@ -756,13 +780,21 @@ window.onload = function () {
         onExpandComplete: () => {
           if (window.gsap) {
             window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
+            window.gsap.delayedCall(1.0, () => {
+              if (window.revealHeroLogo) window.revealHeroLogo();
+            });
+          } else if (window.revealHeroLogo) {
+            window.revealHeroLogo();
           }
-          if (window.revealHeroLogo) window.revealHeroLogo();
         },
       });
     } else if (window.gsap) {
       window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
-      if (window.revealHeroLogo) window.revealHeroLogo();
+      window.gsap.delayedCall(1.0, () => {
+        if (window.revealHeroLogo) window.revealHeroLogo();
+      });
+    } else if (window.revealHeroLogo) {
+      window.revealHeroLogo();
     }
   }
 
