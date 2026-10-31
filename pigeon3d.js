@@ -95,7 +95,7 @@ function init() {
           ease: 'none',
           onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
           onComplete: () => {
-            const targetAngle = Math.PI / 2 - (100 * Math.PI / 180);
+            const targetAngle = Math.PI / 2 - (120 * Math.PI / 180);
             const finish = () => {
               if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
             };
@@ -116,7 +116,7 @@ function init() {
           },
         });
       } else {
-        model.rotation.y = Math.PI / 2 - (100 * Math.PI / 180);
+        model.rotation.y = Math.PI / 2 - (120 * Math.PI / 180);
         container.style.setProperty('--travel', '1');
         if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
       }

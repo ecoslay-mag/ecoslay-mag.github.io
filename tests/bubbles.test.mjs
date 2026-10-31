@@ -30,20 +30,28 @@ test('logo reveal is gated and bubbles sync to walkers', () => {
   assert.match(script, /getBoundingClientRect/);
 });
 
-
-test('bubble scale and mouth anchors are CSS-driven', () => {
+test('bubble metrics are proportional to each walker', () => {
   const css = read('style.css');
-  assert.match(css, /--bubble-scale:\s*clamp\(/);
-  assert.match(css, /--bubble-gap:\s*calc\(/);
-  assert.match(css, /--bubble-overlap:\s*calc\(/);
-  assert.match(css, /--bubble-lift:\s*calc\(/);
-  assert.match(css, /--bubble-tail:\s*calc\(/);
+  assert.match(css, /\.walker-bubble\s*\{[^}]*--bubble-base:\s*var\(--paris-size\)/s);
+  assert.match(css, /\.walker-bubble--pigeon\s*\{[^}]*--bubble-base:\s*var\(--pigeon-size\)/s);
+  assert.match(css, /--bubble-padding-y:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.03\)/);
+  assert.match(css, /--bubble-padding-x:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\)/);
+  assert.match(css, /--bubble-tail:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\)/);
+  assert.match(css, /--bubble-font-size:\s*clamp\(12px,\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\),\s*20px\)/);
+  assert.doesNotMatch(css, /var\(--paris-size\)\s*\/\s*\d+px/);
 });
 
-test('bubble sync reads scaled mouth anchors', () => {
+test('bubble sync measures each tail instead of a global metric', () => {
   const script = read('script.js');
-  assert.match(script, /getComputedStyle\(document\.documentElement\)/);
-  assert.match(script, /bubbleMetric\('--bubble-gap'/);
-  assert.match(script, /bubbleMetric\('--bubble-overlap'/);
-  assert.match(script, /bubbleMetric\('--bubble-lift'/);
+  assert.match(script, /querySelector\(['"]\.walker-bubble__tail['"]\)/);
+  assert.match(script, /borderRightWidth/);
+  assert.match(script, /borderLeftWidth/);
+  assert.doesNotMatch(script, /bubbleMetric\('--bubble-tail'/);
+});
+
+test('bubble layout avoids fixed dimensions and keeps text on one line', () => {
+  const css = read('style.css');
+  assert.doesNotMatch(css, /\.walker-bubble\s*\{[^}]*width:/s);
+  assert.doesNotMatch(css, /\.walker-bubble\s*\{[^}]*height:/s);
+  assert.match(css, /\.walker-bubble__text[^}]*white-space:\s*nowrap/s);
 });

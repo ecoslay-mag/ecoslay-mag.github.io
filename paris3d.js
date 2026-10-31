@@ -124,7 +124,7 @@ function init() {
             ease: 'none',
             onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
             onComplete: () => {
-              const targetAngle = -Math.PI / 2 + (100 * Math.PI / 180);
+              const targetAngle = -Math.PI / 2 + (120 * Math.PI / 180);
               const finish = () => {
                 if (window.onWalkerFinished) window.onWalkerFinished('paris');
               };
@@ -145,11 +145,11 @@ function init() {
             },
           });
         } else if (window.gsap) {
-          model.rotation.y = -Math.PI / 2 + (100 * Math.PI / 180);
+          model.rotation.y = -Math.PI / 2 + (120 * Math.PI / 180);
           container.style.setProperty('--travel', '0');
           if (window.onWalkerFinished) window.onWalkerFinished('paris');
         } else {
-          model.rotation.y = -Math.PI / 2 + (100 * Math.PI / 180);
+          model.rotation.y = -Math.PI / 2 + (120 * Math.PI / 180);
           container.style.setProperty('--travel', '0');
           if (window.onWalkerFinished) window.onWalkerFinished('paris');
         }

@@ -781,19 +781,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function bubbleMetric(name, fallback) {
-    const value = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue(name));
-    return Number.isFinite(value) ? value : fallback;
-  }
-
   function syncBubbles() {
-    const bubbleGap = bubbleMetric('--bubble-gap', 4);
-    const bubbleOverlap = bubbleMetric('--bubble-overlap', 100);
-    const bubbleLift = bubbleMetric('--bubble-lift', 15);
-    const bubbleTail = bubbleMetric('--bubble-tail', 20);
-
     if (pigeonWalker && pigeonBubble) {
       const r = pigeonWalker.getBoundingClientRect();
+      const tail = pigeonBubble.querySelector('.walker-bubble__tail');
+      const bubbleTail = tail ? parseFloat(window.getComputedStyle(tail).borderRightWidth) || 0 : 0;
       const mouthX = r.width * 0.0769;
       const mouthY = r.height * 0.32;
       pigeonBubble.style.left = (r.right - mouthX + bubbleTail) + 'px';
@@ -802,6 +794,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (parisWalker && parisBubble) {
       const r = parisWalker.getBoundingClientRect();
+      const tail = parisBubble.querySelector('.walker-bubble__tail');
+      const bubbleTail = tail ? parseFloat(window.getComputedStyle(tail).borderLeftWidth) || 0 : 0;
       const mouthX = r.width * 0.4615;
       const mouthY = r.height * 0.25;
       parisBubble.style.left = (r.left + mouthX - bubbleTail - parisBubble.offsetWidth) + 'px';

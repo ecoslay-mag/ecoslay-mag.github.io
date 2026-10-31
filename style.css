@@ -20,17 +20,6 @@
   --paris-size: var(--paris-size-hero);
   --pigeon-size: calc(var(--paris-size) * 0.8);
   --walker-height: calc(var(--paris-size) * 0.73);
-  --bubble-scale: clamp(0.8, var(--paris-size) / 220px, 1.2);
-  --bubble-gap: calc(4px * var(--bubble-scale));
-  --bubble-overlap: calc(100px * var(--bubble-scale));
-  --bubble-lift: calc(15px * var(--bubble-scale));
-  --bubble-tail: calc(20px * var(--bubble-scale));
-  --bubble-border: calc(2px * var(--bubble-scale));
-  --bubble-padding-y: calc(8px * var(--bubble-scale));
-  --bubble-padding-x: calc(20px * var(--bubble-scale));
-  --bubble-font-size: clamp(12px, calc(16px * var(--bubble-scale)), 20px);
-  --bubble-stroke: calc(0.6px * var(--bubble-scale));
-  --bubble-tail-thickness: calc(4px * var(--bubble-scale));
 }
 
 body {
@@ -1041,6 +1030,14 @@ h3.apply-heading {
 
 /* ── WALKER SPEECH BUBBLES ── */
 .walker-bubble {
+  --bubble-base: var(--paris-size);
+  --bubble-padding-y: calc(var(--bubble-base) * 0.03);
+  --bubble-padding-x: calc(var(--bubble-base) * 0.077);
+  --bubble-tail: calc(var(--bubble-base) * 0.077);
+  --bubble-border: max(1px, calc(var(--bubble-base) * 0.0077));
+  --bubble-font-size: clamp(12px, calc(var(--bubble-base) * 0.077), 20px);
+  --bubble-stroke: max(0.5px, calc(var(--bubble-base) * 0.0023));
+  --bubble-tail-thickness: calc(var(--bubble-base) * 0.03);
   position: fixed;
   z-index: 61;
   pointer-events: none;
@@ -1056,6 +1053,14 @@ h3.apply-heading {
   box-shadow: none;
   padding: var(--bubble-padding-y) var(--bubble-padding-x);
   animation: slimeMorph 6s ease-in-out infinite;
+}
+
+.walker-bubble--pigeon {
+  --bubble-base: var(--pigeon-size);
+}
+
+.walker-bubble--paris {
+  --bubble-base: var(--paris-size);
 }
 
 .walker-bubble__text {
