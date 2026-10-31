@@ -38,37 +38,42 @@ function init() {
 
   new GLTFLoader().load('models/pigeon.glb', (gltf) => {
     const model = gltf.scene;
-    
-    // Center and scale
+
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     model.position.sub(center);
-    
+
     model.rotation.y = Math.PI / 2;
-    
+
     const maxDim = Math.max(size.x, size.y, size.z);
     group.scale.setScalar(1.8 / maxDim);
-    
+
     group.add(model);
-    
-    // Animation
+
     if (gltf.animations.length) {
       mixer = new THREE.AnimationMixer(model);
       const action = mixer.clipAction(gltf.animations[0]);
       action.play();
     }
-    
-    // Size canvas
-    const rect = container.getBoundingClientRect();
-    const w = rect.width || 200;
-    const h = rect.height || 200;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.render(scene, camera);
-    
-    // Animate
+
+    function resizeRenderer() {
+      const rect = container.getBoundingClientRect();
+      const width = Math.max(1, Math.round(rect.width));
+      const height = Math.max(1, Math.round(rect.height));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
+    }
+
+    resizeRenderer();
+
+    const resizeObserver = new ResizeObserver(resizeRenderer);
+    resizeObserver.observe(container);
+    window.addEventListener('resize', resizeRenderer);
+
     let time = 0;
     function animate() {
       requestAnimationFrame(animate);
@@ -77,16 +82,21 @@ function init() {
       renderer.render(scene, camera);
     }
     animate();
-    
+
     const startDrift = () => {
       if (mixer) mixer.setTime(0);
       container.style.opacity = '1';
+
       if (window.gsap && !reduceMotion) {
-        const maxX = window.innerWidth - (rect.width || 260);
-        gsap.set(container, { x: 0 });
-        gsap.to(container, { x: maxX, duration: TRAVEL_DURATION, ease: 'none' });
+        const travel = { value: 0 };
+        gsap.to(travel, {
+          value: 1,
+          duration: TRAVEL_DURATION,
+          ease: 'none',
+          onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
+        });
       } else {
-        container.style.left = '0px';
+        container.style.setProperty('--travel', '1');
       }
     };
 

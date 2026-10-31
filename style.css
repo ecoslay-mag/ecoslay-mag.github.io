@@ -13,7 +13,11 @@
   --chrome-mid: #c8c8c8;
   --chrome-dark: #888;
   --chrome-shine: #ffffff;
-  --walker-height: 190px;
+  --paris-size-hero: clamp(160px, 18vw, 260px);
+  --paris-size-side: clamp(96px, 15vw, 260px);
+  --paris-size: var(--paris-size-hero);
+  --pigeon-size: calc(var(--paris-size) * 0.8);
+  --walker-height: calc(var(--paris-size) * 0.73);
 }
 
 body {
@@ -947,18 +951,37 @@ h3.apply-heading {
   will-change: transform;
   opacity: 0;
   transition: opacity 0.6s ease;
+  transform: translateX(calc(var(--travel) * (100vw - 100%)));
 }
 
 #pigeon-3d {
+  --travel: 0;
   bottom: var(--walker-height);
-  width: 208px;
-  height: 208px;
+  width: var(--pigeon-size);
+  height: var(--pigeon-size);
 }
 
 #paris-3d {
+  --travel: 1;
   bottom: env(safe-area-inset-bottom, 0px);
-  width: 260px;
-  height: 260px;
+  width: var(--paris-size);
+  height: var(--paris-size);
+}
+
+#pigeon-3d.is-offscreen,
+#paris-3d.is-offscreen,
+.walker-bubble.is-offscreen {
+  visibility: hidden;
+}
+
+#walker-smoke {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  height: clamp(360px, 52vh, 560px);
+  pointer-events: none;
+  z-index: 62;
 }
 
 #pigeon-canvas,
@@ -970,17 +993,7 @@ h3.apply-heading {
 
 @media (max-width: 600px) {
   :root {
-    --walker-height: 160px;
-  }
-
-  #pigeon-3d {
-    width: 176px;
-    height: 176px;
-  }
-
-  #paris-3d {
-    width: 220px;
-    height: 220px;
+    --paris-size: clamp(140px, 34vw, 220px);
   }
 }
 

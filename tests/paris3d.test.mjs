@@ -20,7 +20,6 @@ test('paris script loads the walking model and walks right to left', () => {
   assert.match(js, /DRACOLoader/);
   assert.match(js, /models\/paris-walking\.glb/);
   assert.match(js, /AnimationMixer/);
-  assert.match(js, /window\.innerWidth/);
   assert.match(js, /gsap/);
 });
 
@@ -34,16 +33,14 @@ test('paris styles exist and pigeon is lifted above the walker', () => {
 
 test('pigeon is lowered to sit above paris head', () => {
   const css = read('style.css');
-  assert.match(css, /--walker-height:\s*190px/);
-  assert.match(css, /--walker-height:\s*160px/);
+  assert.match(css, /--walker-height:\s*calc\(var\(--paris-size\)\s*\*\s*0\.73\)/);
 });
 
-test('pigeon is 20 percent smaller than paris', () => {
+test('pigeon is 20 percent smaller than paris via size variables', () => {
   const css = read('style.css');
-  assert.match(css, /#pigeon-3d\s*\{[^}]*width:\s*208px;[^}]*height:\s*208px;/s);
-  assert.match(css, /#paris-3d\s*\{[^}]*width:\s*260px;[^}]*height:\s*260px;/s);
-  assert.match(css, /#pigeon-3d\s*\{[^}]*width:\s*176px;[^}]*height:\s*176px;/s);
-  assert.match(css, /#paris-3d\s*\{[^}]*width:\s*220px;[^}]*height:\s*220px;/s);
+  assert.match(css, /#pigeon-3d\s*\{[^}]*width:\s*var\(--pigeon-size\);[^}]*height:\s*var\(--pigeon-size\);/s);
+  assert.match(css, /#paris-3d\s*\{[^}]*width:\s*var\(--paris-size\);[^}]*height:\s*var\(--paris-size\);/s);
+  assert.match(css, /--pigeon-size:\s*calc\(var\(--paris-size\)\s*\*\s*0\.8\)/);
 });
 
 test('paris root motion is neutralized and walk is 20 percent faster', () => {
@@ -51,8 +48,8 @@ test('paris root motion is neutralized and walk is 20 percent faster', () => {
   assert.match(js, /Hips\.position/);
   assert.match(js, /WALK_TIME_SCALE\s*=\s*0\.6/);
   assert.match(js, /mixer\.timeScale\s*=\s*WALK_TIME_SCALE/);
-  assert.match(js, /const endX\s*=\s*0/);
-  assert.match(js, /const startX = window\.innerWidth - width/);
+  assert.match(js, /--travel/);
+  assert.match(js, /ResizeObserver/);
   assert.match(js, /neutralizeRootMotion/);
 });
 
@@ -61,8 +58,8 @@ test('paris root motion is neutralized and walk is 20 percent faster', () => {
   assert.match(js, /Hips\.position/);
   assert.match(js, /WALK_TIME_SCALE\s*=\s*0\.6/);
   assert.match(js, /mixer\.timeScale\s*=\s*WALK_TIME_SCALE/);
-  assert.match(js, /const endX\s*=\s*0/);
-  assert.match(js, /const startX = window\.innerWidth - width/);
+  assert.match(js, /--travel/);
+  assert.match(js, /ResizeObserver/);
   assert.match(js, /neutralizeRootMotion/);
 });
 

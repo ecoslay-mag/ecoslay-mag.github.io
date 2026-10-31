@@ -96,28 +96,36 @@ function init() {
         mixer.clipAction(clip).play();
       }
 
-      const rect = container.getBoundingClientRect();
-      const width = rect.width || 260;
-      const height = rect.height || 260;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      function resizeRenderer() {
+        const rect = container.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
+      }
+
+      resizeRenderer();
+
+      const resizeObserver = new ResizeObserver(resizeRenderer);
+      resizeObserver.observe(container);
+      window.addEventListener('resize', resizeRenderer);
 
       const startWalk = () => {
         if (mixer) mixer.setTime(0);
         container.style.opacity = '1';
 
         if (!reduceMotion && window.gsap) {
-          const startX = window.innerWidth - width;
-          const endX = 0;
-          gsap.set(container, { x: startX });
-          gsap.to(container, {
-            x: endX,
+          const travel = { value: 1 };
+          gsap.to(travel, {
+            value: 0,
             duration: TRAVEL_DURATION,
             ease: 'none',
+            onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
           });
         } else if (window.gsap) {
-          gsap.set(container, { x: 0 });
+          container.style.setProperty('--travel', '0');
         }
       };
 

@@ -1,4 +1,5 @@
 window.scheduleWalkerStart = (function () {
+  const deterministic = new URLSearchParams(location.search).has('deterministic');
   const starts = [];
   let timer = null;
   let started = false;
@@ -23,10 +24,12 @@ window.scheduleWalkerStart = (function () {
     }
 
     starts.push(start);
-    if (starts.length >= 2) {
+    if (starts.length >= 2 && !deterministic) {
       run();
+    } else if (starts.length >= 2 && deterministic && !timer) {
+      timer = setTimeout(run, 1000);
     } else if (!timer) {
-      timer = setTimeout(run, 8000);
+      timer = setTimeout(run, deterministic ? 1000 : 8000);
     }
   };
 })();
@@ -703,10 +706,19 @@ window.onload = function () {
   }
 
   /* ── WALKER SPEECH BUBBLES ── */
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pigeonBubble = document.getElementById('pigeon-bubble');
   const parisBubble = document.getElementById('paris-bubble');
   const pigeonWalker = document.getElementById('pigeon-3d');
   const parisWalker = document.getElementById('paris-3d');
+  const smokeCanvas = document.getElementById('walker-smoke');
+
+  if (window.SmokeBurst && smokeCanvas) {
+    window.SmokeBurst.init(smokeCanvas);
+    window.addEventListener('resize', () => {
+      if (window.SmokeBurst) window.SmokeBurst.resize();
+    });
+  }
 
   function syncBubbles() {
     if (pigeonWalker && pigeonBubble) {
@@ -727,20 +739,78 @@ window.onload = function () {
     window.gsap.ticker.add(syncBubbles);
   }
 
+  let smokeTriggered = false;
+  let walkersStarted = false;
+
+  function triggerWalkerSmoke() {
+    if (smokeTriggered) return;
+    smokeTriggered = true;
+
+    const bubbles = [pigeonBubble, parisBubble].filter(Boolean);
+
+    if (!reduceMotion && window.SmokeBurst && smokeCanvas) {
+      window.SmokeBurst.burst({
+        expand: 0,
+        hold: 3,
+        fade: 0.5,
+        onExpandComplete: () => {
+          if (window.gsap) {
+            window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
+          }
+          if (window.revealHeroLogo) window.revealHeroLogo();
+        },
+      });
+    } else if (window.gsap) {
+      window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
+      if (window.revealHeroLogo) window.revealHeroLogo();
+    }
+  }
+
+  function checkWalkerCrossing() {
+    if (!walkersStarted || smokeTriggered || !pigeonWalker || !parisWalker) return;
+
+    const pigeonRect = pigeonWalker.getBoundingClientRect();
+    const parisRect = parisWalker.getBoundingClientRect();
+    const pigeonCenter = pigeonRect.left + pigeonRect.width / 2;
+    const parisCenter = parisRect.left + parisRect.width / 2;
+
+    if (pigeonCenter >= parisCenter) {
+      triggerWalkerSmoke();
+    }
+  }
+
+  if (window.gsap) {
+    window.gsap.ticker.add(checkWalkerCrossing);
+  }
+
   window.onWalkersStarted = function () {
+    walkersStarted = true;
     const bubbles = [pigeonBubble, parisBubble].filter(Boolean);
     if (window.gsap) {
       window.gsap.to(bubbles, { opacity: 1, duration: 0.3 });
-      window.gsap.delayedCall(4 /* TRAVEL_DURATION / 2 */, function () {
-        window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
-        if (window.revealHeroLogo) window.revealHeroLogo();
-      });
+      window.gsap.delayedCall(3, triggerWalkerSmoke);
     }
   };
 
   if (window._walkersStartedPending) {
     window._walkersStartedPending = false;
     window.onWalkersStarted();
+  }
+  setTimeout(triggerWalkerSmoke, 4000);
+
+  const isMobile = window.matchMedia('(max-width: 700px)').matches;
+  const hero = document.querySelector('.stage');
+
+  if (isMobile && hero && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = Boolean(entries[0] && entries[0].isIntersecting);
+      [pigeonWalker, parisWalker, pigeonBubble, parisBubble].forEach((el) => {
+        if (!el) return;
+        el.classList.toggle('is-offscreen', !visible);
+      });
+    }, { threshold: 0.05 });
+
+    observer.observe(hero);
   }
 
   /* ── SCROLL-DRIVEN BACKGROUND TRANSITIONS ── */
