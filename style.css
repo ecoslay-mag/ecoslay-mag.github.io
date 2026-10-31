@@ -487,8 +487,9 @@ main {
   text-transform: uppercase;
   -webkit-text-stroke: 0.6px #003300;
   font-family: 'Hiragino Maru Gothic Pro', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
-  font-size: clamp(18px, 4vw, 28px);
+  font-size: clamp(12px, 4vw, 28px);
   letter-spacing: 0.04em;
+  white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
