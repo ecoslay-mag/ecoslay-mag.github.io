@@ -29,3 +29,21 @@ test('logo reveal is gated and bubbles sync to walkers', () => {
   assert.match(script, /syncBubbles/);
   assert.match(script, /getBoundingClientRect/);
 });
+
+
+test('bubble scale and mouth anchors are CSS-driven', () => {
+  const css = read('style.css');
+  assert.match(css, /--bubble-scale:\s*clamp\(/);
+  assert.match(css, /--bubble-gap:\s*calc\(/);
+  assert.match(css, /--bubble-overlap:\s*calc\(/);
+  assert.match(css, /--bubble-lift:\s*calc\(/);
+  assert.match(css, /--bubble-tail:\s*calc\(/);
+});
+
+test('bubble sync reads scaled mouth anchors', () => {
+  const script = read('script.js');
+  assert.match(script, /getComputedStyle\(document\.documentElement\)/);
+  assert.match(script, /bubbleMetric\('--bubble-gap'/);
+  assert.match(script, /bubbleMetric\('--bubble-overlap'/);
+  assert.match(script, /bubbleMetric\('--bubble-lift'/);
+});

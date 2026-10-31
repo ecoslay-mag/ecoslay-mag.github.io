@@ -744,17 +744,26 @@ window.onload = function () {
     });
   }
 
+  function bubbleMetric(name, fallback) {
+    const value = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue(name));
+    return Number.isFinite(value) ? value : fallback;
+  }
+
   function syncBubbles() {
+    const bubbleGap = bubbleMetric('--bubble-gap', 4);
+    const bubbleOverlap = bubbleMetric('--bubble-overlap', 100);
+    const bubbleLift = bubbleMetric('--bubble-lift', 15);
+
     if (pigeonWalker && pigeonBubble) {
       const r = pigeonWalker.getBoundingClientRect();
-      pigeonBubble.style.left = (r.right + 4) + 'px';
+      pigeonBubble.style.left = (r.right + bubbleGap) + 'px';
       pigeonBubble.style.top = (r.top + r.height * 0.25) + 'px';
       pigeonBubble.style.transform = 'none';
     }
     if (parisWalker && parisBubble) {
       const r = parisWalker.getBoundingClientRect();
-      parisBubble.style.left = (r.left - parisBubble.offsetWidth + 100) + 'px';
-      parisBubble.style.top = (r.top + r.height * 0.25 - 15) + 'px';
+      parisBubble.style.left = (r.left - parisBubble.offsetWidth + bubbleOverlap) + 'px';
+      parisBubble.style.top = (r.top + r.height * 0.25 - bubbleLift) + 'px';
       parisBubble.style.transform = 'none';
     }
   }

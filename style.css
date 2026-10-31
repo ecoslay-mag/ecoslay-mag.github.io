@@ -18,6 +18,17 @@
   --paris-size: var(--paris-size-hero);
   --pigeon-size: calc(var(--paris-size) * 0.8);
   --walker-height: calc(var(--paris-size) * 0.73);
+  --bubble-scale: clamp(0.5, var(--paris-size) / 260px, 1);
+  --bubble-gap: calc(4px * var(--bubble-scale));
+  --bubble-overlap: calc(100px * var(--bubble-scale));
+  --bubble-lift: calc(15px * var(--bubble-scale));
+  --bubble-tail: calc(20px * var(--bubble-scale));
+  --bubble-border: calc(2px * var(--bubble-scale));
+  --bubble-padding-y: calc(8px * var(--bubble-scale));
+  --bubble-padding-x: calc(20px * var(--bubble-scale));
+  --bubble-font-size: clamp(9px, calc(16px * var(--bubble-scale)), 18px);
+  --bubble-stroke: calc(0.6px * var(--bubble-scale));
+  --bubble-tail-thickness: calc(4px * var(--bubble-scale));
 }
 
 body {
@@ -1009,16 +1020,16 @@ h3.apply-heading {
   align-items: center;
   justify-content: center;
   background: #000;
-  border: 2px solid #000;
+  border: var(--bubble-border) solid #000;
   border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%;
   box-shadow: none;
-  padding: 8px 20px;
+  padding: var(--bubble-padding-y) var(--bubble-padding-x);
   animation: slimeMorph 6s ease-in-out infinite;
 }
 
 .walker-bubble__text {
   font-family: 'Hiragino Maru Gothic Pro', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
-  font-size: clamp(14px, 12px + 0.6vw, 20px);
+  font-size: var(--bubble-font-size);
   letter-spacing: 0.06em;
   white-space: nowrap;
   font-style: italic;
@@ -1026,7 +1037,7 @@ h3.apply-heading {
 
 .walker-bubble--pigeon .walker-bubble__text {
   color: #39ff14;
-  -webkit-text-stroke: 0.6px #003300;
+  -webkit-text-stroke: var(--bubble-stroke) #003300;
   paint-order: stroke fill;
   text-shadow:
     0 0 4px #39ff14,
@@ -1037,7 +1048,7 @@ h3.apply-heading {
 
 .walker-bubble--paris .walker-bubble__text {
   color: #ff1493;
-  -webkit-text-stroke: 0.6px #330018;
+  -webkit-text-stroke: var(--bubble-stroke) #330018;
   paint-order: stroke fill;
   text-shadow:
     0 0 4px #ff1493,
@@ -1053,20 +1064,20 @@ h3.apply-heading {
   transform: translateY(-50%);
   width: 0;
   height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
+  border-top: var(--bubble-tail-thickness) solid transparent;
+  border-bottom: var(--bubble-tail-thickness) solid transparent;
 }
 
 /* pigeon bubble sits to the right of the walker -> tail points left */
 .walker-bubble--pigeon .walker-bubble__tail {
-  left: -20px;
-  border-right: 20px solid #111;
+  left: calc(var(--bubble-tail) * -1);
+  border-right: var(--bubble-tail) solid #111;
 }
 
 /* Paris bubble sits to the left of the walker -> tail points right */
 .walker-bubble--paris .walker-bubble__tail {
-  right: -20px;
-  border-left: 20px solid #111;
+  right: calc(var(--bubble-tail) * -1);
+  border-left: var(--bubble-tail) solid #111;
 }
 
 /* ── SECTION BACKGROUNDS ── */
