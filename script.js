@@ -34,7 +34,36 @@ window.scheduleWalkerStart = (function () {
   };
 })();
 
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── HERO LOADER ── */
+  const heroLoader = document.getElementById('hero-loader');
+  let heroLoaderTimer = null;
+  function showHeroLoader() {
+    if (heroLoader) heroLoader.classList.add('is-visible');
+  }
+  function hideHeroLoader() {
+    if (heroLoaderTimer) {
+      clearTimeout(heroLoaderTimer);
+      heroLoaderTimer = null;
+    }
+    if (heroLoader) heroLoader.classList.remove('is-visible');
+  }
+  if (heroLoader) {
+    heroLoaderTimer = setTimeout(showHeroLoader, 200);
+    const logoContainer = document.getElementById('logo-3d');
+    if (logoContainer) {
+      const readyObserver = new MutationObserver(() => {
+        if (logoContainer.classList.contains('is-ready') || logoContainer.classList.contains('is-fallback')) {
+          hideHeroLoader();
+        }
+      });
+      readyObserver.observe(logoContainer, { attributes: true, attributeFilter: ['class'] });
+      if (logoContainer.classList.contains('is-ready') || logoContainer.classList.contains('is-fallback')) {
+        hideHeroLoader();
+      }
+    }
+  }
 
   /* ── HAMBURGER TOGGLE ── */
   const navToggle = document.getElementById('nav-toggle');
@@ -753,17 +782,22 @@ window.onload = function () {
     const bubbleGap = bubbleMetric('--bubble-gap', 4);
     const bubbleOverlap = bubbleMetric('--bubble-overlap', 100);
     const bubbleLift = bubbleMetric('--bubble-lift', 15);
+    const bubbleTail = bubbleMetric('--bubble-tail', 20);
 
     if (pigeonWalker && pigeonBubble) {
       const r = pigeonWalker.getBoundingClientRect();
-      pigeonBubble.style.left = (r.right + bubbleGap) + 'px';
-      pigeonBubble.style.top = (r.top + r.height * 0.25) + 'px';
+      const mouthX = r.width * 0.0769;
+      const mouthY = r.height * 0.32;
+      pigeonBubble.style.left = (r.right - mouthX + bubbleTail) + 'px';
+      pigeonBubble.style.top = (r.top + mouthY - pigeonBubble.offsetHeight / 2) + 'px';
       pigeonBubble.style.transform = 'none';
     }
     if (parisWalker && parisBubble) {
       const r = parisWalker.getBoundingClientRect();
-      parisBubble.style.left = (r.left - parisBubble.offsetWidth + bubbleOverlap) + 'px';
-      parisBubble.style.top = (r.top + r.height * 0.25 - bubbleLift) + 'px';
+      const mouthX = r.width * 0.4615;
+      const mouthY = r.height * 0.25;
+      parisBubble.style.left = (r.left + mouthX - bubbleTail - parisBubble.offsetWidth) + 'px';
+      parisBubble.style.top = (r.top + mouthY - parisBubble.offsetHeight / 2) + 'px';
       parisBubble.style.transform = 'none';
     }
   }
@@ -826,6 +860,7 @@ window.onload = function () {
 
   window.onWalkersStarted = function () {
     walkersStarted = true;
+    hideHeroLoader();
     const bubbles = [pigeonBubble, parisBubble].filter(Boolean);
     if (window.gsap) {
       window.gsap.to(bubbles, { opacity: 1, duration: 0.3 });
@@ -982,4 +1017,4 @@ window.onload = function () {
       requestUpdate();
     });
   }
-};
+});
