@@ -95,10 +95,28 @@ function init() {
           ease: 'none',
           onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
           onComplete: () => {
-            if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
+            const targetAngle = Math.PI / 2 - (100 * Math.PI / 180);
+            const finish = () => {
+              if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
+            };
+            const rotate = () => {
+              if (window.gsap && !reduceMotion) {
+                window.gsap.to(model.rotation, { y: targetAngle, duration: 2, ease: 'power2.out', onComplete: finish });
+              } else {
+                model.rotation.y = targetAngle;
+                finish();
+              }
+            };
+            if (window.logoSpinComplete) {
+              rotate();
+            } else {
+              window.pendingWalkerRotations = window.pendingWalkerRotations || [];
+              window.pendingWalkerRotations.push(rotate);
+            }
           },
         });
       } else {
+        model.rotation.y = Math.PI / 2 - (100 * Math.PI / 180);
         container.style.setProperty('--travel', '1');
         if (window.onWalkerFinished) window.onWalkerFinished('pigeon');
       }

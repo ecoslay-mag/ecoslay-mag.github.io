@@ -14,11 +14,13 @@
   --chrome-dark: #888;
   --chrome-shine: #ffffff;
   --paris-size-hero: clamp(160px, 18vw, 260px);
+  --topbar-height: 64px;
+  --intro-lift: 80px;
   --paris-size-side: clamp(96px, 15vw, 260px);
   --paris-size: var(--paris-size-hero);
   --pigeon-size: calc(var(--paris-size) * 0.8);
   --walker-height: calc(var(--paris-size) * 0.73);
-  --bubble-scale: clamp(0.5, var(--paris-size) / 260px, 1);
+  --bubble-scale: clamp(0.8, var(--paris-size) / 220px, 1.2);
   --bubble-gap: calc(4px * var(--bubble-scale));
   --bubble-overlap: calc(100px * var(--bubble-scale));
   --bubble-lift: calc(15px * var(--bubble-scale));
@@ -26,7 +28,7 @@
   --bubble-border: calc(2px * var(--bubble-scale));
   --bubble-padding-y: calc(8px * var(--bubble-scale));
   --bubble-padding-x: calc(20px * var(--bubble-scale));
-  --bubble-font-size: clamp(9px, calc(16px * var(--bubble-scale)), 18px);
+  --bubble-font-size: clamp(12px, calc(16px * var(--bubble-scale)), 20px);
   --bubble-stroke: calc(0.6px * var(--bubble-scale));
   --bubble-tail-thickness: calc(4px * var(--bubble-scale));
 }
@@ -403,10 +405,7 @@ main {
   aspect-ratio: 1.775 / 0.527;
   overflow: visible;
   margin-top: calc(
-    (var(--nav-bottom) + 100vh - var(--pigeon-bottom) - var(--pigeon-height) + var(--pigeon-head-inset)) / 2
-    - var(--logo-half-height)
-    - var(--main-top)
-    + var(--stage-lift)
+    50vh - var(--main-top) + var(--intro-lift) - var(--logo-half-height)
   );
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -806,6 +805,10 @@ h3.apply-heading {
 }
 
 @media (max-width: 600px) {
+  :root {
+    --topbar-height: 52px;
+  }
+
   #topbar {
     justify-content: flex-end;
     gap: 0;
@@ -996,7 +999,7 @@ h3.apply-heading {
 
 #pigeon-3d {
   --travel: 0;
-  bottom: var(--walker-height);
+  top: calc(var(--topbar-height) + 12px);
   width: var(--pigeon-size);
   height: var(--pigeon-size);
 }
@@ -1016,10 +1019,9 @@ h3.apply-heading {
 
 #walker-smoke {
   position: fixed;
-  left: 0;
-  bottom: 0;
+  inset: 0;
   width: 100vw;
-  height: clamp(360px, 52vh, 560px);
+  height: 100vh;
   pointer-events: none;
   z-index: 62;
 }

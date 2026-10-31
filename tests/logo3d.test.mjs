@@ -62,7 +62,7 @@ test('hero logo is whiter and centered between nav and pigeon head', () => {
   assert.match(css, /\.stage\s*\{[^}]*justify-content:\s*flex-start;/s);
   assert.match(css, /\.logo-3d\s*\{[^}]*--pigeon-height:\s*208px;/s);
   assert.match(css, /\.logo-3d\s*\{[^}]*--pigeon-head-inset:\s*48px;/s);
-  assert.match(css, /\.logo-3d\s*\{[^}]*margin-top:\s*calc\(/s);
+  assert.match(css, /\.logo-3d\s*\{[^}]*margin-top:\s*calc\([^)]*50vh/s);
   assert.match(css, /--pigeon-height:\s*176px/);
   assert.match(css, /--pigeon-head-inset:\s*40\.6px/);
   assert.match(js, /toneMappingExposure\s*=\s*1\.15/);

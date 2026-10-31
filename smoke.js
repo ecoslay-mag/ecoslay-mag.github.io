@@ -12,6 +12,7 @@
 
   let canvas = null;
   let ctx = null;
+  let target = null;
   let maskCanvas = null;
   let sparkleTexture = null;
   let puffTextures = [];
@@ -42,26 +43,46 @@
     return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   }
 
-  function init(canvasEl) {
+  function init(canvasEl, targetEl) {
     if (disableSmoke || !canvasEl) return false;
     canvas = canvasEl;
     ctx = canvas.getContext('2d');
+    if (targetEl) target = targetEl;
     resize();
     return true;
+  }
+
+  function setTarget(targetEl) {
+    target = targetEl || null;
+    if (canvas) resize();
   }
 
   function resize() {
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    W = Math.max(1, Math.round(rect.width || 1200));
-    H = Math.max(1, Math.round(rect.height || 560));
+    W = Math.max(1, Math.round(rect.width || window.innerWidth || 1200));
+    H = Math.max(1, Math.round(rect.height || window.innerHeight || 560));
     canvas.width = W;
     canvas.height = H;
-    CX = W / 2;
-    CY = H * 0.80;
+
+    let centerX = W / 2;
+    let centerY = H / 2;
+    let radiusX = Math.min(W, H) * 0.22;
+    let radiusY = Math.min(W, H) * 0.16;
+
+    if (target) {
+      const targetRect = target.getBoundingClientRect();
+      centerX = targetRect.left + targetRect.width / 2;
+      centerY = targetRect.top + targetRect.height / 2;
+      radiusX = Math.max(72, targetRect.width * 0.62 + 48);
+      radiusY = Math.max(52, targetRect.height * 0.62 + 36);
+    }
+
+    CX = centerX;
+    CY = centerY;
+    RX = radiusX;
+    RY = radiusY;
     SCALE = Math.max(0.45, Math.min(1.4, Math.min(W / 1200, H / 560)));
-    RX = W * 0.276;
-    RY = H * 0.74;
     buildTextures();
     clear();
   }
@@ -326,7 +347,6 @@
     startTime = performance.now();
     lastFrame = startTime;
     clear();
-    console.log('SMOKE DEBUG', 'W',W,'H',H,'CX',CX,'CY',CY,'RX',RX,'RY',RY,'particles',particles.length,'minY',Math.min(...particles.map(p=>p.y)),'maxY',Math.max(...particles.map(p=>p.y)));
     raf = requestAnimationFrame(frame);
     return true;
   }
@@ -374,9 +394,6 @@
     }
 
     clear();
-    ctx.fillStyle='red';
-    ctx.fillRect(0,0,80,40);
-
     const alpha = fadeProgress > 0 ? 1 - easeInOut(fadeProgress) : (timing.expand <= 0 ? 1 : Math.min(1, elapsed / 0.25));
 
     for (const p of particles) {
@@ -430,6 +447,7 @@
 
   window.SmokeBurst = {
     init,
+    setTarget,
     burst,
     resize,
     isRunning: function () {

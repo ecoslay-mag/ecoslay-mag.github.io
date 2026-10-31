@@ -124,13 +124,32 @@ function init() {
             ease: 'none',
             onUpdate: () => container.style.setProperty('--travel', String(travel.value)),
             onComplete: () => {
-              if (window.onWalkerFinished) window.onWalkerFinished('paris');
+              const targetAngle = -Math.PI / 2 + (100 * Math.PI / 180);
+              const finish = () => {
+                if (window.onWalkerFinished) window.onWalkerFinished('paris');
+              };
+              const rotate = () => {
+                if (window.gsap && !reduceMotion) {
+                  window.gsap.to(model.rotation, { y: targetAngle, duration: 2, ease: 'power2.out', onComplete: finish });
+                } else {
+                  model.rotation.y = targetAngle;
+                  finish();
+                }
+              };
+              if (window.logoSpinComplete) {
+                rotate();
+              } else {
+                window.pendingWalkerRotations = window.pendingWalkerRotations || [];
+                window.pendingWalkerRotations.push(rotate);
+              }
             },
           });
         } else if (window.gsap) {
+          model.rotation.y = -Math.PI / 2 + (100 * Math.PI / 180);
           container.style.setProperty('--travel', '0');
           if (window.onWalkerFinished) window.onWalkerFinished('paris');
         } else {
+          model.rotation.y = -Math.PI / 2 + (100 * Math.PI / 180);
           container.style.setProperty('--travel', '0');
           if (window.onWalkerFinished) window.onWalkerFinished('paris');
         }

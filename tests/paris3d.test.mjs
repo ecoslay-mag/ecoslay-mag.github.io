@@ -23,12 +23,12 @@ test('paris script loads the walking model and walks right to left', () => {
   assert.match(js, /gsap/);
 });
 
-test('paris styles exist and pigeon is lifted above the walker', () => {
+test('paris styles exist and pigeon walks under the top bar', () => {
   const css = read('style.css');
   assert.match(css, /#paris-3d/);
   assert.match(css, /#paris-canvas/);
   assert.match(css, /--walker-height/);
-  assert.match(css, /#pigeon-3d\s*\{[^}]*bottom:\s*var\(--walker-height\)/s);
+  assert.match(css, /#pigeon-3d\s*\{[^}]*top:\s*calc\(var\(--topbar-height\)\s*\+\s*12px\)/s);
 });
 
 test('pigeon is lowered to sit above paris head', () => {

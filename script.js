@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   let logoSpinComplete = false;
+  window.logoSpinComplete = false;
   let walkersFinished = 0;
   let scrollPromptRevealScheduled = false;
 
@@ -136,6 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window.onLogoSpinComplete = function () {
     logoSpinComplete = true;
+    window.logoSpinComplete = true;
+    if (Array.isArray(window.pendingWalkerRotations)) {
+      window.pendingWalkerRotations.splice(0).forEach((rotate) => rotate());
+    }
     maybeRevealScrollPrompt();
   };
 
@@ -770,6 +775,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (window.SmokeBurst && smokeCanvas) {
     window.SmokeBurst.init(smokeCanvas);
+    if (window.SmokeBurst.setTarget) window.SmokeBurst.setTarget(document.getElementById('logo-3d'));
     window.addEventListener('resize', () => {
       if (window.SmokeBurst) window.SmokeBurst.resize();
     });
@@ -825,19 +831,20 @@ document.addEventListener('DOMContentLoaded', function () {
         onExpandComplete: () => {
           if (window.gsap) {
             window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
-            window.gsap.delayedCall(1.0, () => {
+            window.gsap.delayedCall(3, () => {
               if (window.revealHeroLogo) window.revealHeroLogo();
             });
           } else if (window.revealHeroLogo) {
             window.revealHeroLogo();
           }
         },
+        onComplete: () => {
+          if (window.revealHeroLogo) window.revealHeroLogo();
+        },
       });
     } else if (window.gsap) {
       window.gsap.to(bubbles, { opacity: 0, duration: 0.4 });
-      window.gsap.delayedCall(1.0, () => {
-        if (window.revealHeroLogo) window.revealHeroLogo();
-      });
+      if (window.revealHeroLogo) window.revealHeroLogo();
     } else if (window.revealHeroLogo) {
       window.revealHeroLogo();
     }
@@ -866,15 +873,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const bubbles = [pigeonBubble, parisBubble].filter(Boolean);
     if (window.gsap) {
       window.gsap.to(bubbles, { opacity: 1, duration: 0.3 });
-      window.gsap.delayedCall(3, triggerWalkerSmoke);
     }
+    setTimeout(triggerWalkerSmoke, 8500);
   };
 
   if (window._walkersStartedPending) {
     window._walkersStartedPending = false;
     window.onWalkersStarted();
   }
-  setTimeout(triggerWalkerSmoke, 4000);
 
   const isMobile = window.matchMedia('(max-width: 700px)').matches;
   const hero = document.querySelector('.stage');
