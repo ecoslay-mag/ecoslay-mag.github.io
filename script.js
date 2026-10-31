@@ -92,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ── HERO SEQUENCE ── */
   const stage = document.querySelector('.stage');
   
+  setTimeout(hideHeroLoader, 1000);
+
   const intro = gsap.timeline({ delay: 1 });
   
   intro
