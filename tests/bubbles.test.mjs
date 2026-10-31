@@ -33,7 +33,7 @@ test('logo reveal is gated and bubbles sync to walkers', () => {
 test('bubble metrics are proportional to each walker', () => {
   const css = read('style.css');
   assert.match(css, /\.walker-bubble\s*\{[^}]*--bubble-base:\s*var\(--paris-size\)/s);
-  assert.match(css, /\.walker-bubble--pigeon\s*\{[^}]*--bubble-base:\s*var\(--pigeon-size\)/s);
+  assert.match(css, /\.walker-bubble--pigeon\s*\{[^}]*--bubble-base:\s*var\(--paris-size\)/s);
   assert.match(css, /--bubble-padding-y:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.03\)/);
   assert.match(css, /--bubble-padding-x:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\)/);
   assert.match(css, /--bubble-tail:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.09\)/);

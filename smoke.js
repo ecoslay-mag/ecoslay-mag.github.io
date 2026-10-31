@@ -8,7 +8,7 @@
   const DEFAULT_TIMING = { expand: 0, hold: 3, fade: 0.5 };
   const PUFF_RADII = [12, 20, 32, 48, 68];
   const PINK = { r: 255, g: 20, b: 147 };
-  const GREEN = { r: 57, g: 255, b: 20 };
+  const GREEN = { r: 139, g: 195, b: 74 };
 
   let canvas = null;
   let ctx = null;
@@ -151,7 +151,7 @@
     octx.translate(CX, CY);
     octx.scale(1, RY / RX);
     const fill = octx.createLinearGradient(-RX, 0, RX, 0);
-    fill.addColorStop(0, 'rgba(57,255,20,0.9)');
+    fill.addColorStop(0, 'rgba(139,195,74,0.9)');
     fill.addColorStop(0.45, 'rgba(255,255,255,0.95)');
     fill.addColorStop(1, 'rgba(255,20,147,0.9)');
     octx.beginPath();

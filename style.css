@@ -470,7 +470,7 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #39ff14;
+  color: #8BC34A;
   font-style: italic;
   text-transform: uppercase;
   -webkit-text-stroke: 0.6px #003300;
@@ -484,10 +484,10 @@ main {
   z-index: 70;
   paint-order: stroke fill;
   text-shadow:
-    0 0 4px #39ff14,
-    0 0 8px #39ff14,
-    0 0 14px rgba(57, 255, 20, 0.75),
-    0 0 26px rgba(57, 255, 20, 0.35);
+    0 0 4px #8BC34A,
+    0 0 8px #8BC34A,
+    0 0 14px rgba(139, 195, 74, 0.75),
+    0 0 26px rgba(139, 195, 74, 0.35);
 }
 
 #hero-loader.is-visible {
@@ -1057,7 +1057,7 @@ h3.apply-heading {
 }
 
 .walker-bubble--pigeon {
-  --bubble-base: var(--pigeon-size);
+  --bubble-base: var(--paris-size);
 }
 
 .walker-bubble--paris {
@@ -1073,14 +1073,14 @@ h3.apply-heading {
 }
 
 .walker-bubble--pigeon .walker-bubble__text {
-  color: #39ff14;
+  color: #8BC34A;
   -webkit-text-stroke: var(--bubble-stroke) #003300;
   paint-order: stroke fill;
   text-shadow:
-    0 0 4px #39ff14,
-    0 0 8px #39ff14,
-    0 0 14px rgba(57, 255, 20, 0.75),
-    0 0 26px rgba(57, 255, 20, 0.35);
+    0 0 4px #8BC34A,
+    0 0 8px #8BC34A,
+    0 0 14px rgba(139, 195, 74, 0.75),
+    0 0 26px rgba(139, 195, 74, 0.35);
 }
 
 .walker-bubble--paris .walker-bubble__text {

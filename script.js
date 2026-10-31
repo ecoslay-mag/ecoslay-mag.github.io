@@ -513,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
       intro.eventCallback('onComplete', () => {
         if (ghostStarted) return;
         ghostStarted = true;
+        if (window.SmokeBurst) window.SmokeBurst.resize();
         revealGhost();
         gsap.delayedCall(1, ghostLoop);
       });
@@ -528,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       // Reduced motion: still reveal after hero
       intro.eventCallback('onComplete', () => {
+        if (window.SmokeBurst) window.SmokeBurst.resize();
         revealGhost();
         placeGhost();
       });
