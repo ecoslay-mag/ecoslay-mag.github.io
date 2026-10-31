@@ -35,13 +35,15 @@ const out = [...document.querySelectorAll('.walker-bubble')].map((b) => {
   const tls = getComputedStyle(tail);
   const br = b.getBoundingClientRect();
   const tr = text.getBoundingClientRect();
+  const tailRect = tail.getBoundingClientRect();
   const pl = parseFloat(bs.paddingLeft);
   const pr = parseFloat(bs.paddingRight);
   const pt = parseFloat(bs.paddingTop);
   const pb = parseFloat(bs.paddingBottom);
   return {
     id: b.id,
-    bubble: { w: br.width, h: br.height },
+    bubble: { w: br.width, h: br.height, left: br.left, right: br.right },
+    tailRect: { left: tailRect.left, right: tailRect.right },
     text: { w: tr.width, h: tr.height },
     padding: { l: pl, r: pr, t: pt, b: pb },
     font: parseFloat(ts.fontSize),
@@ -89,6 +91,13 @@ test('bubbles keep text inside padding and scale proportionally', { skip: !chrom
       assert.ok(bubble.padding.l > 0 && bubble.padding.r > 0 && bubble.padding.t > 0 && bubble.padding.b > 0, `${width} ${bubble.id}: missing padding`);
       assert.ok(bubble.font > 0, `${width} ${bubble.id}: missing font size`);
       assert.ok(bubble.tail.top > 0 && bubble.tail.bottom > 0 && bubble.tail.horiz > 0, `${width} ${bubble.id}: missing tail`);
+      if (bubble.id === 'pigeon-bubble') {
+        const inward = bubble.tailRect.right - bubble.bubble.left;
+        assert.ok(inward > 1 && inward < 12, `${width} ${bubble.id}: tail offset should be a few pixels inside the bubble (got ${inward})`);
+      } else {
+        const inward = bubble.bubble.right - bubble.tailRect.left;
+        assert.ok(inward > 1 && inward < 12, `${width} ${bubble.id}: tail offset should be a few pixels inside the bubble (got ${inward})`);
+      }
       assert.ok(bubble.bubble.w > 0 && bubble.bubble.h > 0, `${width} ${bubble.id}: missing bubble box`);
     }
   }

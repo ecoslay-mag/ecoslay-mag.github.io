@@ -1033,7 +1033,8 @@ h3.apply-heading {
   --bubble-base: var(--paris-size);
   --bubble-padding-y: calc(var(--bubble-base) * 0.03);
   --bubble-padding-x: calc(var(--bubble-base) * 0.077);
-  --bubble-tail: calc(var(--bubble-base) * 0.077);
+  --bubble-tail: calc(var(--bubble-base) * 0.09);
+  --bubble-tail-offset: 8px;
   --bubble-border: max(1px, calc(var(--bubble-base) * 0.0077));
   --bubble-font-size: clamp(12px, calc(var(--bubble-base) * 0.077), 20px);
   --bubble-stroke: max(0.5px, calc(var(--bubble-base) * 0.0023));
@@ -1106,13 +1107,13 @@ h3.apply-heading {
 
 /* pigeon bubble sits to the right of the walker -> tail points left */
 .walker-bubble--pigeon .walker-bubble__tail {
-  left: calc(var(--bubble-tail) * -1);
+  left: calc((var(--bubble-tail) + var(--bubble-border)) * -1 + var(--bubble-tail-offset));
   border-right: var(--bubble-tail) solid #111;
 }
 
 /* Paris bubble sits to the left of the walker -> tail points right */
 .walker-bubble--paris .walker-bubble__tail {
-  right: calc(var(--bubble-tail) * -1);
+  right: calc((var(--bubble-tail) + var(--bubble-border)) * -1 + var(--bubble-tail-offset));
   border-left: var(--bubble-tail) solid #111;
 }
 

@@ -36,7 +36,7 @@ test('bubble metrics are proportional to each walker', () => {
   assert.match(css, /\.walker-bubble--pigeon\s*\{[^}]*--bubble-base:\s*var\(--pigeon-size\)/s);
   assert.match(css, /--bubble-padding-y:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.03\)/);
   assert.match(css, /--bubble-padding-x:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\)/);
-  assert.match(css, /--bubble-tail:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\)/);
+  assert.match(css, /--bubble-tail:\s*calc\(var\(--bubble-base\)\s*\*\s*0\.09\)/);
   assert.match(css, /--bubble-font-size:\s*clamp\(12px,\s*calc\(var\(--bubble-base\)\s*\*\s*0\.077\),\s*20px\)/);
   assert.doesNotMatch(css, /var\(--paris-size\)\s*\/\s*\d+px/);
 });
