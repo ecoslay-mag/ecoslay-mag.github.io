@@ -388,7 +388,7 @@ main {
   --pigeon-head-inset: 48px;
   --main-top: 92px;
   --stage-lift: 130px;
-  --logo-half-height: 18.5565%;
+  --logo-half-height: calc(min(820px, 90vw) * 1.25 * 0.527 / 1.775 / 2);
   position: relative;
   width: 125%;
   aspect-ratio: 1.775 / 0.527;
