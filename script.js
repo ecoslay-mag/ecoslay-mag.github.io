@@ -778,6 +778,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (window.SmokeBurst && smokeCanvas) {
     window.SmokeBurst.init(smokeCanvas);
     if (window.SmokeBurst.setTarget) window.SmokeBurst.setTarget(document.getElementById('logo-3d'));
+    if (window.SmokeBurst.setFadeAnchor) window.SmokeBurst.setFadeAnchor(document.querySelector('.stage'));
     window.addEventListener('resize', () => {
       if (window.SmokeBurst) window.SmokeBurst.resize();
     });

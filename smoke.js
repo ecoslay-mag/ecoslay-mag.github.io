@@ -26,6 +26,9 @@
   let callbacks = {};
   let expandNotified = false;
   let spawnAccumulator = 0;
+  let fadeRegion = { start: 0, end: 0, active: false };
+  let fadeAnchor = null;
+  const FADE_HEIGHT = 120;
 
   let W = 0;
   let H = 0;
@@ -57,6 +60,24 @@
     if (canvas) resize();
   }
 
+  // Element whose bottom edge defines where the smoke fades out (the hero stage).
+  function setFadeAnchor(el) {
+    fadeAnchor = el || null;
+    if (canvas) resize();
+  }
+
+  // All positions are kept in document coordinates. The canvas is absolutely
+  // positioned at the document's top-left, so it scrolls together with the logo.
+  function docRect(el) {
+    const r = el.getBoundingClientRect();
+    return {
+      left: r.left + window.scrollX,
+      top: r.top + window.scrollY,
+      width: r.width,
+      height: r.height,
+    };
+  }
+
   function resize() {
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -64,6 +85,7 @@
     H = Math.max(1, Math.round(rect.height || window.innerHeight || 560));
     canvas.width = W;
     canvas.height = H;
+    const origin = docRect(canvas);
 
     let centerX = W / 2;
     let centerY = H / 2;
@@ -71,11 +93,20 @@
     let radiusY = Math.min(W, H) * 0.16;
 
     if (target) {
-      const targetRect = target.getBoundingClientRect();
-      centerX = targetRect.left + targetRect.width / 2;
-      centerY = targetRect.top + targetRect.height / 2;
-      radiusX = Math.max(72, targetRect.width * 0.62 + 48);
-      radiusY = Math.max(52, targetRect.height * 0.62 + 36);
+      const t = docRect(target);
+      centerX = t.left + t.width / 2 - origin.left;
+      centerY = t.top + t.height / 2 - origin.top;
+      radiusX = Math.max(72, t.width * 0.62 + 48);
+      radiusY = Math.max(52, t.height * 0.62 + 36);
+    }
+
+    fadeRegion.active = false;
+    if (fadeAnchor) {
+      const a = docRect(fadeAnchor);
+      const start = a.top + a.height - origin.top;
+      fadeRegion.start = start;
+      fadeRegion.end = start + FADE_HEIGHT;
+      fadeRegion.active = true;
     }
 
     CX = centerX;
@@ -333,8 +364,8 @@
       fade: callbacks.fade ?? DEFAULT_TIMING.fade,
     };
 
-    const rect = canvas.getBoundingClientRect();
-    if (Math.round(rect.width) !== W || Math.round(rect.height) !== H) resize();
+    // Recompute the center and fade band every burst so they match the current layout.
+    resize();
 
     particles = [];
     for (let i = 0; i < 420; i++) particles.push(spawnParticle(RX * 0.30));
@@ -427,6 +458,19 @@
     ctx.globalCompositeOperation = 'destination-in';
     ctx.globalAlpha = 1;
     ctx.drawImage(maskCanvas, 0, 0);
+
+    if (fadeRegion.active && H > 0) {
+      const fadeStartRatio = Math.max(0, Math.min(1, fadeRegion.start / H));
+      const fadeEndRatio = Math.max(0, Math.min(1, fadeRegion.end / H));
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, 'rgba(0,0,0,1)');
+      grad.addColorStop(fadeStartRatio, 'rgba(0,0,0,1)');
+      grad.addColorStop(fadeEndRatio, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
     ctx.globalCompositeOperation = 'source-over';
 
     if (elapsed >= total) {
@@ -448,6 +492,7 @@
   window.SmokeBurst = {
     init,
     setTarget,
+    setFadeAnchor,
     burst,
     resize,
     isRunning: function () {
