@@ -379,7 +379,14 @@ main {
   right: 16px;
 }
 
-
+.issue-02-image {
+  width: 80%;
+  max-width: none;
+  height: auto;
+  display: block;
+  margin: 40px auto;
+  border-radius: 12px;
+}
 
 .logo-3d {
   --nav-bottom: 64px;
@@ -662,37 +669,6 @@ main {
   color: #ff1493;
 }
 
-.topbar-link[href="#open-call"]:hover {
-  color: #ff1493;
-}
-
-.deadline-banner {
-  font-size: clamp(20px, 18px + 1.5vw, 36px);
-  font-weight: bold;
-  color: #ff1493;
-  text-align: center;
-  animation: blinkRed 1s ease-in-out infinite;
-}
-
-@keyframes blinkRed {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-h3.open-call-heading,
-h3.apply-heading {
-  color: #111;
-  font-size: clamp(22px, 19px + 1vw, 34px);
-}
-
-.open-call-video {
-  width: 65%;
-  max-width: 560px;
-  border-radius: 12px;
-  margin: 24px auto;
-  display: block;
-}
-
 .impressum-row {
   display: flex;
   align-items: center;
@@ -749,7 +725,8 @@ h3.apply-heading {
     padding: 10px 28px;
   }
 
-  .carousel {
+  .carousel,
+  .issue-02-image {
     width: 100%;
   }
 

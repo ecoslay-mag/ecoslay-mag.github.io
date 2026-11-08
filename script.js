@@ -402,22 +402,6 @@ document.addEventListener('DOMContentLoaded', function () {
     berlinObserver.observe(berlinCarousel);
   }
 
-  /* ── OPEN CALL VIDEO ── */
-  const openCallVideo = document.querySelector('.open-call-video');
-  if (openCallVideo) {
-    const openCallObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          openCallVideo.play().catch(() => {});
-        } else {
-          openCallVideo.pause();
-        }
-      });
-    }, { threshold: 0.3 });
-
-    openCallObserver.observe(openCallVideo);
-  }
-
   /* ── TEAM LABEL ── */
   const teamLabel = document.getElementById('team-label');
   const teamPaths = document.querySelectorAll('.team-contours path');
@@ -900,7 +884,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const sections = [
     { id: 'about',     bg: 'images/pages/anthology-103.webp' },
     { id: 'magazine',  bg: 'images/pages/anthology-23.webp' },
-    { id: 'open-call', bg: 'images/pages/anthology-53.webp' },
     { id: 'events',    bg: 'images/pages/anthology-71.webp' },
     { id: 'team',      bg: 'images/pages/anthology-93.webp' },
     { id: 'contact',   bg: 'images/pages/anthology-08.webp' },
