@@ -22,7 +22,7 @@ test('issue 02 content lives inside the magazine section', () => {
   const html = read('index.html');
 
   assert.match(html, /<h3>Issue 01: <em style="color:#ff1493">Ecoslay, an Anthology<\/em><\/h3>/);
-  assert.match(html, /<h3>Issue 02: <em style="color:#ff1493">The Urban Issue<\/em><\/h3>\n      <img src="images\/zoom_meeting_ecoslay_02\.webp"[^>]*class="issue-02-image"/);
+  assert.match(html, /<h3>Issue 02: <em style="color:#ff1493">The Urban Issue<\/em><\/h3>\n      <video src="images\/zoom_meeting_ecoslay_02\.mp4"[^>]*class="issue-02-video"/);
   assert.match(html, /With contributions by: Diana Andrei, Teresa Awa, Karla Jelic Balta, Max Koloman, Mary Maggic, Gaja Pegan Nahtigal, Philomena Natalia, Luiza Prado, Zakia Soomauroo, Katherine Tyndall/);
   assert.match(html, /Edited by the Ecoslay Mag team/);
   assert.match(html, /This project was generously funded by MA7 Stadt Wien Kultur\./);

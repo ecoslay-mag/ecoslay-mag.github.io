@@ -379,13 +379,14 @@ main {
   right: 16px;
 }
 
-.issue-02-image {
+.issue-02-video {
   width: 80%;
   max-width: none;
   height: auto;
   display: block;
   margin: 40px auto;
   border-radius: 12px;
+  background: #e0e0e0;
 }
 
 .logo-3d {
@@ -726,7 +727,7 @@ main {
   }
 
   .carousel,
-  .issue-02-image {
+  .issue-02-video {
     width: 100%;
   }
 
